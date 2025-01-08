@@ -1,3 +1,34 @@
+
+## Abstract
+
+### Title
+DevDiscuss: A Collaborative Problem-Solving Platform
+
+### Objective
+To create a web-based platform for developers, students, and tech enthusiasts to post technical questions and receive solutions collaboratively.
+
+### Features
+- **User Authentication:** Secure registration and login.
+- **Post Questions:** Create discussions with tags.
+- **Commenting:** Add, edit, and delete comments on discussions.
+- **Voting System:** Upvote or downvote questions and comments.
+- **Search and Filter:** Search discussions by tags or keywords.
+- **Reputation System:** Reward active participants.
+
+---
+
+## Tech Stack
+- **Frontend:** React, Material-UI
+- **Backend:** Node.js with Express.js or Spring Boot
+- **Database:** SQLite
+- **Hosting:** Netlify/Vercel (Frontend) and Heroku/Render (Backend)
+
+---
+
+This document provides an overview of the available API endpoints and features of the DevDiscuss platform.
+
+---
+
 # API Documentation for DevDiscuss
 
 This document outlines the API endpoints for the DevDiscuss platform, designed for collaborative problem-solving and knowledge sharing. Each section is categorized based on functionality.
@@ -227,32 +258,3 @@ Fetches a list of all registered users. Requires authentication.
 - `200 OK`: List of users.
 
 ---
-
-## Abstract
-
-### Title
-DevDiscuss: A Collaborative Problem-Solving Platform
-
-### Objective
-To create a web-based platform for developers, students, and tech enthusiasts to post technical questions and receive solutions collaboratively.
-
-### Features
-- **User Authentication:** Secure registration and login.
-- **Post Questions:** Create discussions with tags.
-- **Commenting:** Add, edit, and delete comments on discussions.
-- **Voting System:** Upvote or downvote questions and comments.
-- **Search and Filter:** Search discussions by tags or keywords.
-- **Reputation System:** Reward active participants.
-
----
-
-## Tech Stack
-- **Frontend:** React, Material-UI
-- **Backend:** Node.js with Express.js or Spring Boot
-- **Database:** SQLite
-- **Hosting:** Netlify/Vercel (Frontend) and Heroku/Render (Backend)
-
----
-
-This document provides an overview of the available API endpoints and features of the DevDiscuss platform.
-
