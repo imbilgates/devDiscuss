@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import axios from 'axios';
 
-import Home from './component/Home';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useAuth } from './contex/AuthContex';
 import Auth from './component/Auth';
 import Nav from './pages/Nav';
 import CreateDiscussion from './component/CreateDiscussion'
 import MyDiscussion from './component/MyDiscussion';
+import Home from './pages/Home';
 function App() {
   axios.defaults.baseURL = "http://localhost:5000/api";
   const navigate = useNavigate();
