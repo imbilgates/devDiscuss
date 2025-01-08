@@ -30,3 +30,16 @@ export const deleteComment = (discussionId, commentId) =>
 
 export const editComment = (discussionId, commentId, updatedComment) =>
     axios.put(`/discussion/${discussionId}/comments/${commentId}`, updatedComment, { withCredentials: true });
+
+// AUTH
+export const registerUser = (userData) =>
+    axios.post("/auth/register", userData);
+
+export const loginUser = (credentials) =>
+    axios.post("/auth/login", credentials);
+
+export const getAuthenticatedUser = () =>
+    axios.get("/auth/", { withCredentials: true });
+
+export const listAllUsers = () =>
+    axios.get("/auth/users", { withCredentials: true });
