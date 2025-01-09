@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Box, TextField, Button, Typography, Paper } from '@mui/material';
 import { useAuth } from '../contex/AuthContex';
+import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +13,8 @@ const Auth = () => {
     const [message, setMessage] = useState('');
 
     const {  setIsAuth } = useAuth();
+
+    const navigate = useNavigate();
 
 
     const handleToggle = () => {
@@ -33,6 +36,7 @@ const Auth = () => {
                 localStorage.setItem('token', response.data.token);
                 setMessage(response.data.message);
                 setIsAuth(true);
+                navigate('/')
             } else {
                 const response = await axios.post('/auth/register', { name, email, password });
                 setMessage(response.data.message);

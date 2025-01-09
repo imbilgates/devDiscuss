@@ -123,7 +123,7 @@ export const VoteDiscussion = async (req, res) => {
     const { vote } = req.body;
     const userId = req.user.id;
 
-    if (!["like", "dislike"].includes(vote)) {
+    if (!["like", "dislike", "unlike", "undislike"].includes(vote)) {
         return res.status(400).json({ msg: "Invalid vote type!" });
     }
 
@@ -140,26 +140,47 @@ export const VoteDiscussion = async (req, res) => {
         if (vote === 'like') {
             if (discussion.votes.upvotes.includes(userId)) {
                 return res.status(400).json({ msg: "you've already liked this discussion.." })
-            };
+            }
 
             if (discussion.votes.downvotes.includes(userId)) {
+                // Remove the downvote if user switches to like
                 discussion.votes.downvotes = discussion.votes.downvotes.filter(
                     (user) => !user.equals(userId)
                 );
             }
 
             discussion.votes.upvotes.push(userId);
-        } else {
+        } else if (vote === 'unlike') {
+            if (!discussion.votes.upvotes.includes(userId)) {
+                return res.status(400).json({ msg: "You haven't liked this discussion yet." });
+            }
+
+            // Remove the upvote
+            discussion.votes.upvotes = discussion.votes.upvotes.filter(
+                (user) => !user.equals(userId)
+            );
+        } else if (vote === 'dislike') {
             if (discussion.votes.downvotes.includes(userId)) {
                 return res.status(400).json({ msg: "you've already disliked this discussion.." })
-            };
+            }
 
             if (discussion.votes.upvotes.includes(userId)) {
+                // Remove the upvote if user switches to dislike
                 discussion.votes.upvotes = discussion.votes.upvotes.filter(
                     (user) => !user.equals(userId)
-                )
-            };
+                );
+            }
+
             discussion.votes.downvotes.push(userId);
+        } else if (vote === 'undislike') {
+            if (!discussion.votes.downvotes.includes(userId)) {
+                return res.status(400).json({ msg: "You haven't disliked this discussion yet." });
+            }
+
+            // Remove the downvote
+            discussion.votes.downvotes = discussion.votes.downvotes.filter(
+                (user) => !user.equals(userId)
+            );
         }
 
         await discussion.save();
@@ -169,6 +190,7 @@ export const VoteDiscussion = async (req, res) => {
         res.status(500).send("Server Error");
     }
 }
+
 
 // COMMENTS
 export const addComments = async (req, res) => {
