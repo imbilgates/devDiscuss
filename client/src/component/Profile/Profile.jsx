@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Skeleton, Typography } from "@mui/material";
+import { Avatar, Skeleton, Typography, Box, Grid, Paper } from "@mui/material";
 import { useAuth } from "../../contex/AuthContex";
 import Discussion from "./Discussion";
 
@@ -9,19 +9,19 @@ const Profile = () => {
   const getInitials = (user) => user?.name?.charAt(0).toUpperCase();
 
   return (
-    <div className="container mt-3">
-      <div className="row justify-content-center">
-        <div className="col-lg-8">
-          <div className="card shadow-sm p-3">
-            <div className="d-flex align-items-center">
-              {/* Left Section: Profile Picture */}
-              <div className="me-3">
+    <Box sx={{ mt: 3, px: 2 }}>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12} md={8}>
+          <Paper elevation={3} sx={{ p: 3, borderRadius: "8px" }}>
+            <Grid container spacing={2} alignItems="center">
+              {/* Profile Picture */}
+              <Grid item xs={12} sm={3} display="flex" justifyContent="center">
                 {isLoading ? (
                   <Skeleton
                     variant="rectangular"
                     width={80}
                     height={80}
-                    style={{ borderRadius: "4px" }}
+                    sx={{ borderRadius: "4px" }}
                   />
                 ) : (
                   <Avatar
@@ -30,57 +30,63 @@ const Profile = () => {
                       width: 80,
                       height: 80,
                       fontSize: 32,
-                      borderRadius: "4px", // Makes it square
+                      borderRadius: "4px", // Keeps it square
                     }}
                   >
                     {getInitials(user)}
                   </Avatar>
                 )}
-              </div>
+              </Grid>
 
-              {/* Middle Section: User Info */}
-              <div>
+              {/* User Info */}
+              <Grid item xs={12} sm={6}>
                 {isLoading ? (
                   <>
-                    <Skeleton width={120} height={30} />
-                    <Skeleton width={150} height={20} />
+                    <Skeleton width="70%" height={30} />
+                    <Skeleton width="90%" height={20} />
                   </>
                 ) : (
                   <>
-                    <Typography variant="h5" className="mb-1">
-                      {user.name}
+                    <Typography variant="h5" gutterBottom>
+                      {user?.name}
                     </Typography>
-                    <Typography variant="body1" className="text-muted">
-                      {user.email}
+                    <Typography variant="body1" color="textSecondary">
+                      {user?.email}
                     </Typography>
                   </>
                 )}
-              </div>
+              </Grid>
 
-              {/* Right Section: Timestamps */}
-              <div className="ms-auto text-end">
+              {/* Timestamps */}
+              <Grid item xs={12} sm={3} textAlign={{ xs: "center", sm: "right" }}>
                 {isLoading ? (
                   <>
-                    <Skeleton width={180} height={20} />
-                    <Skeleton width={180} height={20} />
+                    <Skeleton width="80%" height={20} />
+                    <Skeleton width="80%" height={20} />
                   </>
                 ) : (
                   <>
-                    <Typography variant="body2" className="text-muted">
-                      <strong>Created At:</strong> {new Date(user.createdAt).toLocaleDateString()}
+                    <Typography variant="body2" color="textSecondary">
+                      <strong>Created At:</strong>{" "}
+                      {new Date(user?.createdAt).toLocaleDateString()}
                     </Typography>
-                    <Typography variant="body2" className="text-muted mt-1">
-                      <strong>Updated At:</strong> {new Date(user.updatedAt).toLocaleDateString()}
+                    <Typography variant="body2" color="textSecondary" mt={1}>
+                      <strong>Updated At:</strong>{" "}
+                      {new Date(user?.updatedAt).toLocaleDateString()}
                     </Typography>
                   </>
                 )}
-              </div>
-            </div>
-          </div>
-        </div>
-        <Discussion />
-      </div>
-    </div>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+
+        {/* Discussions Section */}
+        <Grid item xs={12} md={8}>
+          <Discussion />
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

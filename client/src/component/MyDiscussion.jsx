@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listDiscussions } from '../service/Service';
+import { listDiscussions, voteDiscussion } from '../service/Service';
 import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Skeleton, Avatar, TextField, IconButton, MenuItem, Select } from '@mui/material';
 
 import AddComment from "./Comment/AddComment";
@@ -34,6 +34,18 @@ const MyDiscussion = () => {
 
   const handleTagChange = (event) => {
     setSearchTag(event.target.value);
+  };
+
+  const handleVote = async (id, voteType) => {
+    try {
+      const voteData = { vote: voteType };
+      await voteDiscussion(id, voteData);
+      // Fetch updated discussions after voting
+      fetchDiscussions();
+    } catch (error) {
+      console.error("Error voting:", error);
+      alert("Error voting. Please try again.");
+    }
   };
 
   const sortedDiscussions = () => {
@@ -145,12 +157,13 @@ const MyDiscussion = () => {
             </CardContent>
 
             <CardActions>
-              <Button variant="outlined" size="small">
+              <Button variant="outlined" size="small" onClick={() => handleVote(discussion._id, "like")}>
                 👍 {discussion.votes.upvotes.length || 0}
               </Button>
-              <Button variant="outlined" color="error" size="small">
+              <Button variant="outlined" color="error" size="small" onClick={() => handleVote(discussion._id, "dislike")}>
                 👎 {discussion.votes.downvotes.length || 0}
               </Button>
+
             </CardActions>
             <CardContent>
               <h6>Comments:</h6>

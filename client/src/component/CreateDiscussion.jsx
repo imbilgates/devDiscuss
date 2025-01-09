@@ -1,22 +1,34 @@
 import React, { useState } from "react";
 import { createDiscussion } from '../service/Service';
 import { useNavigate } from 'react-router-dom';
-import { predefinedTags } from '../utils/PreTags'
-
+import { predefinedTags } from '../utils/PreTags';
 
 const CreateDiscussion = () => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
-
   const handleTagAdd = (tag) => {
     if (tag === "") return;
+
+    if (!predefinedTags.includes(tag)) {
+      setErrorMessage("You can only add predefined tags.");
+      return;
+    }
+
+    if (tags.length >= 3) {
+      setErrorMessage("You cannot add more than 3 tags.");
+      return;
+    }
+
     if (!tags.includes(tag)) {
       setTags([...tags, tag]);
+      setErrorMessage(""); // Clear any previous error message
     }
+
     setSearchInput("");
   };
 
@@ -41,6 +53,7 @@ const CreateDiscussion = () => {
       e.target.description.value = "";
       setTags([]);
       setSearchInput("");
+      setErrorMessage("");
       navigate("/");
     } catch (error) {
       setLoading(false);
@@ -90,6 +103,11 @@ const CreateDiscussion = () => {
               Add
             </button>
           </div>
+          {errorMessage && (
+            <div className="text-danger mt-2">
+              <small>{errorMessage}</small>
+            </div>
+          )}
           <div className="mt-2">
             {predefinedTags
               .filter(
