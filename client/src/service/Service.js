@@ -1,7 +1,12 @@
 import axios from "axios";
 
 // DISCUSSIONS
-export const listDiscussions = () => axios.get("/discussion");
+export const listDiscussions = (tag) => {
+    const url = tag ? `/discussion?tag=${encodeURIComponent(tag)}` : '/discussion';
+    return axios.get(url);
+};
+
+  
 
 export const getDiscussionById = (id) => axios.get(`/discussion/${id}`);
 

@@ -8,6 +8,7 @@ import Nav from './pages/Nav';
 import CreateDiscussion from './component/CreateDiscussion'
 import MyDiscussion from './component/MyDiscussion';
 import Home from './pages/Home';
+import Profile from './component/profile/Profile';
 function App() {
   axios.defaults.baseURL = "http://localhost:5000/api";
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ function App() {
           <Route path='/auth' element={<Auth />} />
           <Route path='/' element={<MyDiscussion />} />
           <Route path='/create' element={<CreateDiscussion />} />
+          <Route path='/profile' element={<Profile />} />
         </Routes>
       </div>
     </>

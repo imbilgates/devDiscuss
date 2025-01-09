@@ -61,7 +61,7 @@ const AddComment = ({ id }) => {
                 >
                     {loading ? <CircularProgress size={24} color="inherit" /> : 'POST'}
                 </Button>
-                <Comment id={id} />
+                <Comment id={id} flag={loading}/>
             </Box>
         </Box >
     );

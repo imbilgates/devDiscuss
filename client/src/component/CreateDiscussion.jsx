@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createDiscussion } from '../service/Service';
 import { useNavigate } from 'react-router-dom';
+import { predefinedTags } from '../utils/PreTags'
 
 
 const CreateDiscussion = () => {
@@ -10,7 +11,6 @@ const CreateDiscussion = () => {
 
   const navigate = useNavigate();
 
-  const predefinedTags = ["React", "Next.js", "JavaScript", "Node.js", "MongoDB", "CSS", "HTML"];
 
   const handleTagAdd = (tag) => {
     if (tag === "") return;

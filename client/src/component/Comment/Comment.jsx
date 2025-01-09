@@ -3,7 +3,7 @@ import { getComments, deleteComment, editComment } from '../../service/Service';
 import { Card, CardContent, Button, Typography, Box, Avatar, Skeleton, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton } from '@mui/material';
 import { useAuth } from '../../contex/AuthContex';
 
-const Comment = ({ id }) => {
+const Comment = ({ id, flag }) => {
     const [comments, setComments] = useState([]);
     const [visibleCount, setVisibleCount] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ const Comment = ({ id }) => {
         };
 
         fetchComments();
-    }, [id]);
+    }, [id, flag]);
 
     const handleLoadMore = () => {
         setVisibleCount((prev) => prev + 1);
