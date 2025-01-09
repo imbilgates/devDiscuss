@@ -100,6 +100,23 @@ export const getDiscussionById = async (req, res) => {
     }
 }
 
+export const getDiscussionByUser = async (req, res) => {
+    const userId = req.user.id; 
+    try {
+        const discussions = await discussionModel.find({ "user": mongoose.Types.ObjectId(userId) });        
+
+        if (!discussions || discussions.length === 0) {
+            return res.status(404).json({ msg: "No discussions found for this user" });
+        }
+
+        res.json(discussions);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+};
+
+
 // VOTE FOR DISCUSSION
 export const VoteDiscussion = async (req, res) => {
     const discussionId = req.params.id;

@@ -5,6 +5,7 @@ import {
     updateDiscussion,
     deleteDiscussion,
     getDiscussionById,
+    getDiscussionByUser,
     VoteDiscussion,
     addComments,
     getComments,
@@ -17,6 +18,7 @@ const route = express.Router();
 route.use(verifyToken);
 
 route.get("/", getDiscussion);
+route.get("/user", getDiscussionByUser);
 route.get("/:id", getDiscussionById);
 route.post("/create", createDiscussion);
 route.put("/update/:id", updateDiscussion);
