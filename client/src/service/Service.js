@@ -6,7 +6,7 @@ export const listDiscussions = (tag) => {
     return axios.get(url);
 };
 
-  
+export const getDiscussionByUser = () => axios.get("/discussion/user", { withCredentials: true });
 
 export const getDiscussionById = (id) => axios.get(`/discussion/${id}`);
 

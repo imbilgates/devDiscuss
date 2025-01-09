@@ -1,81 +1,74 @@
 import React, { useEffect, useState } from 'react';
-import { getDiscussionById } from '../../service/Service'; 
+import { getDiscussionByUser } from '../../service/Service'; 
 import { useAuth } from '../../contex/AuthContex';
 
 const Discussion = () => {
   const { user, isLoading } = useAuth();
-  const [discussion, setDiscussion] = useState(null);
+  const [discussions, setDiscussions] = useState([]);
   const [error, setError] = useState(null);
 
-  const id = user?._id;
-
   useEffect(() => {
-    console.log(id);
-    
-    if (!id) return;
-
-    const fetchDiscussion = async () => {
+    const fetchDiscussions = async () => {
       try {
-        const response = await getDiscussionById(id);
-        setDiscussion(response.data);
+        const response = await getDiscussionByUser();
+        setDiscussions(response.data);
       } catch (err) {
-        setError(err.response?.data?.message || 'Error fetching discussion');
+        setError(err.response?.data?.msg || 'Error fetching discussions');
       }
     };
 
-    fetchDiscussion();
-  }, [id]);
+    fetchDiscussions();
+  }, []);
 
   if (isLoading) return <div>Loading...</div>;
 
   if (error) return <div>Error: {error}</div>;
 
-  if (!discussion) return <div>Loading discussion...</div>;
-
-  const { title, description, user: discussionUser, tags, comments, votes } = discussion;
+  if (discussions.length === 0) return <div>No discussions found for this user.</div>;
 
   return (
     <div>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <p>Posted by: {discussionUser.name} ({discussionUser.email})</p>
+      <h1>Your Discussions</h1>
+      {discussions.map((discussion) => (
+        <div key={discussion._id} style={{ border: '1px solid #ccc', padding: '16px', marginBottom: '16px' }}>
+          <h2>{discussion.title}</h2>
+          <p>{discussion.description}</p>
+          <p>
+            <strong>Posted by:</strong> {user?.name || 'Unknown'} ({user?.email || 'Unknown'})
+          </p>
 
-      <div>
-        <strong>Tags:</strong>
-        {tags.map((tag, index) => (
-          <span key={index} style={{ marginRight: '8px' }}>#{tag}</span>
-        ))}
-      </div>
-
-      <div>
-        <strong>Votes:</strong>
-        <p>Upvotes: {votes.upvotes.length}</p>
-        <p>Downvotes: {votes.downvotes.length}</p>
-      </div>
-
-      <div>
-        <strong>Comments:</strong>
-        {comments.length > 0 ? (
-          <ul>
-            {comments.map((comment) => (
-              <li key={comment._id}>
-                <p>{comment.commentText}</p>
-                <small>By User ID: {comment.user}</small>
-                <br />
-                <small>At: {new Date(comment.createdAt).toLocaleString()}</small>
-              </li>
+          <div>
+            <strong>Tags:</strong>
+            {discussion.tags.map((tag, index) => (
+              <span key={index} style={{ marginRight: '8px' }}>#{tag}</span>
             ))}
-          </ul>
-        ) : (
-          <p>No comments yet.</p>
-        )}
-      </div>
+          </div>
 
-      {user?._id && (
-        <div>
-          <p>Welcome, {user.name}. Your User ID: {user._id}</p>
+          <div>
+            <strong>Votes:</strong>
+            <p>Upvotes: {discussion.votes.upvotes.length}</p>
+            <p>Downvotes: {discussion.votes.downvotes.length}</p>
+          </div>
+
+          <div>
+            <strong>Comments:</strong>
+            {discussion.comments.length > 0 ? (
+              <ul>
+                {discussion.comments.map((comment) => (
+                  <li key={comment._id}>
+                    <p>{comment.commentText}</p>
+                    <small>By User ID: {comment.user}</small>
+                    <br />
+                    <small>At: {new Date(comment.createdAt).toLocaleString()}</small>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </div>
         </div>
-      )}
+      ))}
     </div>
   );
 };
