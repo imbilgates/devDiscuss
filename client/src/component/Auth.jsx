@@ -36,7 +36,7 @@ const Auth = () => {
                 localStorage.setItem('token', response.data.token);
                 setMessage(response.data.message);
                 setIsAuth(true);
-                navigate('/')
+                // navigate('/')
             } else {
                 const response = await axios.post('/auth/register', { name, email, password });
                 setMessage(response.data.message);
