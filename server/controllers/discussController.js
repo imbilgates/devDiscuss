@@ -101,7 +101,7 @@ export const getDiscussionById = async (req, res) => {
 }
 
 export const getDiscussionByUser = async (req, res) => {
-    const userId = req.user.id; // Assuming the user ID is available in the request object
+    const userId = req.user.id; 
     try {
         const discussions = await discussionModel.find({ user: mongoose.Types.ObjectId(userId) })
             .populate("votes.upvotes", "name email") // Populate name and email of upvoters
