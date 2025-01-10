@@ -24,7 +24,7 @@ app.use(express.json());
 app.use("/api/auth", authRoute)
 app.use("/api/discussion", discussRoute)
 
-app.listen(PORT, () => {
+app.listen(PORT, '192.168.1.2', () => {
     connectDB();
     console.log(`Server listening on ${PORT}`)
 });

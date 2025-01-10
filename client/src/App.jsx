@@ -11,7 +11,7 @@ import Profile from './component/profile/Profile';
 import AllDiscussion from './component/AllDiscussion';
 import Loading from './utils/Loading';
 function App() {
-  axios.defaults.baseURL = "http://localhost:5000/api";
+  axios.defaults.baseURL = "http://192.168.1.2:5000/api";
   const navigate = useNavigate();
 
   const { isAuth, isLoading } = useAuth()
