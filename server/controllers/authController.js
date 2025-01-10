@@ -63,11 +63,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
-        const token = jwt.sign(
-            { id: user._id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN }
-        );
+        const token = createToken(user);
 
         res.status(200).json({
             message: "Login successful",
@@ -117,4 +113,33 @@ export const getUser = async (req, res) => {
             details: error.message
         })
     }
+};
+
+export const googleLogin = (req, res) => {
+    const token = jwt.sign(
+        { id: req.user._id, email: req.user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(200).json({
+        message: "Google login successful",
+        token,
+        user: {
+            name: req.user.name,
+            email: req.user.email,
+            createdAt: req.user.createdAt,
+            updatedAt: req.user.updatedAt,
+            _id: req.user._id,
+        },
+    });
+};
+
+
+const createToken = (user) => {
+    return jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
 };
