@@ -115,26 +115,6 @@ export const getUser = async (req, res) => {
     }
 };
 
-export const googleLogin = (req, res) => {
-    const token = jwt.sign(
-        { id: req.user._id, email: req.user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN }
-    );
-
-    res.status(200).json({
-        message: "Google login successful",
-        token,
-        user: {
-            name: req.user.name,
-            email: req.user.email,
-            createdAt: req.user.createdAt,
-            updatedAt: req.user.updatedAt,
-            _id: req.user._id,
-        },
-    });
-};
-
 
 const createToken = (user) => {
     return jwt.sign(

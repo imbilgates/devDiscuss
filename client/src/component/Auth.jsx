@@ -12,7 +12,7 @@ const Auth = () => {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
-    const {  setIsAuth } = useAuth();
+    const { setIsAuth } = useAuth();
 
     const navigate = useNavigate();
 
@@ -144,6 +144,7 @@ const Auth = () => {
                         {isLogin ? 'Login' : 'Register'}
                     </Button>
                 </Box>
+
                 <Typography
                     variant="body2"
                     sx={{
@@ -158,6 +159,7 @@ const Auth = () => {
                         ? "Don't have an account? Register here."
                         : 'Already have an account? Login here.'}
                 </Typography>
+
             </Paper>
         </Box>
     );

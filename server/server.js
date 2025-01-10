@@ -2,7 +2,6 @@ import express from "express";
 import { configDotenv } from "dotenv";
 configDotenv();
 import cors from "cors";
-import passport from './config/passport.js';
 
 import discussRoute from './routes/discussRoute.js'
 import authRoute from './routes/authRoute.js';
@@ -12,7 +11,6 @@ const FRONTEND_URL = "http://localhost:5173";
 
 
 const app = express();
-app.use(passport.initialize());
 app.use(express.json());
 
 app.use(cors({
