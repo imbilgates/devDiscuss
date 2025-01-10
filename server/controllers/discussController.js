@@ -101,9 +101,12 @@ export const getDiscussionById = async (req, res) => {
 }
 
 export const getDiscussionByUser = async (req, res) => {
-    const userId = req.user.id; 
+    const userId = req.user.id; // Assuming the user ID is available in the request object
     try {
-        const discussions = await discussionModel.find({ "user": mongoose.Types.ObjectId(userId) });        
+        const discussions = await discussionModel.find({ user: mongoose.Types.ObjectId(userId) })
+            .populate("votes.upvotes", "name email") // Populate name and email of upvoters
+            .populate("votes.downvotes", "name email") // Populate name and email of downvoters
+            .populate("user", "name email"); // Populate the owner of the discussion
 
         if (!discussions || discussions.length === 0) {
             return res.status(404).json({ msg: "No discussions found for this user" });
