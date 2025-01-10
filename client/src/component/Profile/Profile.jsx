@@ -1,7 +1,9 @@
 import React from "react";
-import { Avatar, Skeleton, Typography, Box, Grid, Paper } from "@mui/material";
+import { Skeleton, Typography, Box, Grid, Paper } from "@mui/material";
+
 import { useAuth } from "../../contex/AuthContex";
 import Discussion from "./Discussion";
+import DynamicAvatar from '../../utils/DynamicAvatar'
 
 const Profile = () => {
   const { user, isLoading } = useAuth();
@@ -24,17 +26,7 @@ const Profile = () => {
                     sx={{ borderRadius: "4px" }}
                   />
                 ) : (
-                  <Avatar
-                    sx={{
-                      bgcolor: "primary.main",
-                      width: 80,
-                      height: 80,
-                      fontSize: 32,
-                      borderRadius: "4px", // Keeps it square
-                    }}
-                  >
-                    {getInitials(user)}
-                  </Avatar>
+                  <DynamicAvatar firstLetter={getInitials(user) || "U"} variant="rounded" />
                 )}
               </Grid>
 
@@ -48,7 +40,7 @@ const Profile = () => {
                 ) : (
                   <>
                     <Typography variant="h5" gutterBottom>
-                      {user?.name}
+                      {user?.name.toUpperCase()}
                     </Typography>
                     <Typography variant="body1" color="textSecondary">
                       {user?.email}

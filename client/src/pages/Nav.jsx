@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contex/AuthContex';
+import DynamicAvatar from '../utils/DynamicAvatar';
 
 const Nav = () => {
   const { user, error, setIsAuth, isLoading } = useAuth();
@@ -21,6 +22,7 @@ const Nav = () => {
           
           {/* Show input field and button only on large screens */}
           <div className="d-none d-sm-flex align-items-center">
+            <DynamicAvatar firstLetter={user?.name?.charAt(0).toUpperCase()} variant="rounded"/>
             <input
               type="text"
               value={user.email}

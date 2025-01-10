@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listDiscussions, voteDiscussion } from '../service/Service';
 import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Skeleton, Avatar, Select, MenuItem } from '@mui/material';
+import DynamicAvatar from '../utils/DynamicAvatar'
 
 import AddComment from "./Comment/AddComment";
 import { timeAgo } from '../utils/timeAgo';
@@ -127,11 +128,9 @@ const MyDiscussion = () => {
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar sx={{ marginRight: 2 }}>
-                    {discussion.user?.name?.charAt(0).toUpperCase() || "U"}
-                  </Avatar>
+                  <DynamicAvatar firstLetter={discussion.user?.name?.charAt(0).toUpperCase() || "U"} />
                   <Typography variant="h6" sx={{ fontWeight: 'bold', marginRight: 2 }}>
-                    {discussion.user?.name || "Anonymous User"}
+                    {discussion.user?.name.toUpperCase() || "Anonymous User"}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     {timeAgo(discussion.createdAt)}
