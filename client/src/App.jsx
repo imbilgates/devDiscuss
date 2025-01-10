@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import axios from 'axios';
-
 import { Route, Routes, useNavigate } from 'react-router-dom';
+
 import { useAuth } from './contex/AuthContex';
 import Auth from './component/Auth';
 import Nav from './pages/Nav';
 import CreateDiscussion from './component/CreateDiscussion'
-import MyDiscussion from './component/MyDiscussion';
 import Home from './pages/Home';
 import Profile from './component/profile/Profile';
+import AllDiscussion from './component/AllDiscussion';
 function App() {
   axios.defaults.baseURL = "http://localhost:5000/api";
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ function App() {
         </>}
         <Routes>
           <Route path='/auth' element={<Auth />} />
-          <Route path='/' element={<MyDiscussion />} />
+          <Route path='/' element={<AllDiscussion />} />
           <Route path='/create' element={<CreateDiscussion />} />
           <Route path='/profile' element={<Profile />} />
         </Routes>

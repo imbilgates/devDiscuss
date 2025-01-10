@@ -8,7 +8,7 @@ import { timeAgo } from '../utils/timeAgo';
 import { predefinedTags } from '../utils/PreTags';
 import { useAuth } from "../contex/AuthContex";
 
-const MyDiscussion = () => {
+const AllDiscussion = () => {
   const [discussions, setDiscussions] = useState([]);
   const [filter, setFilter] = useState("newest");
   const [searchTag, setSearchTag] = useState("");
@@ -196,4 +196,4 @@ const MyDiscussion = () => {
   );
 };
 
-export default MyDiscussion;
+export default AllDiscussion;
