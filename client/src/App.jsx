@@ -9,6 +9,7 @@ import CreateDiscussion from './component/CreateDiscussion'
 import Home from './pages/Home';
 import Profile from './component/profile/Profile';
 import AllDiscussion from './component/AllDiscussion';
+import Loading from './utils/Loading';
 function App() {
   axios.defaults.baseURL = "http://localhost:5000/api";
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function App() {
   }, [isAuth]);
 
   if (isLoading) {
-    return "Loading...";
+    return <Loading isLoading={isLoading} text='' />;
   }
 
   return (
