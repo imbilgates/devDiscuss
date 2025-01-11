@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, TextField, Button, Typography, Paper } from '@mui/material';
 import { useAuth } from '../contex/AuthContex';
 import { useNavigate } from 'react-router-dom';
+import GoogleLoginAuth from './GoogleLoginAuth';
 
 const Auth = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -14,7 +15,7 @@ const Auth = () => {
 
     const { setIsAuth } = useAuth();
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
 
     const handleToggle = () => {
@@ -159,6 +160,9 @@ const Auth = () => {
                         ? "Don't have an account? Register here."
                         : 'Already have an account? Login here.'}
                 </Typography>
+
+
+                    <GoogleLoginAuth />
 
             </Paper>
         </Box>

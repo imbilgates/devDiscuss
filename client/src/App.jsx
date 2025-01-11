@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
+
 import { useAuth } from './contex/AuthContex';
 import Auth from './component/Auth';
 import Nav from './pages/Nav';
@@ -23,6 +24,8 @@ function App() {
       navigate("/auth");
     }
   }, [isAuth]);
+
+
 
   if (isLoading) {
     return <Loading isLoading={isLoading} text='' />;

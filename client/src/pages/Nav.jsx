@@ -25,7 +25,7 @@ const Nav = () => {
             <DynamicAvatar firstLetter={user?.name?.charAt(0).toUpperCase()} variant="rounded"/>
             <input
               type="text"
-              value={user.email}
+              value={user?.email}
               className="form-control disabled-input bg-primary text-white"
               placeholder="Username"
               aria-label="Username"

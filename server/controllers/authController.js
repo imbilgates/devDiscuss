@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import userModel from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
+import { oauth2Client } from '../config/GoogleOauth2.js'
 
 
 export const register = async (req, res) => {
@@ -51,13 +52,11 @@ export const login = async (req, res) => {
     }
 
     try {
-        // Find the user by email
         const user = await userModel.findOne({ email });
         if (!user) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
-        // Compare the entered password with the stored hashed password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ error: "Invalid credentials" });
@@ -112,6 +111,45 @@ export const getUser = async (req, res) => {
             message: "there was an error fetching user",
             details: error.message
         })
+    }
+};
+
+export const googleLogin = async (req, res) => {
+    try {
+        const { token } = req.body;
+
+        const ticket = await oauth2Client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+
+        // Find user by googleId (not _id)
+        let user = await userModel.findOne({ googleId: payload.sub });
+
+        // If user doesn't exist, create a new user
+        if (!user) {
+            user = new userModel({
+                name: payload.name,
+                email: payload.email,
+                googleId: payload.sub,  // Store Google ID here
+                password: null,  // You can leave this empty if you're not using passwords
+            });
+            await user.save();
+        }
+
+        // Generate a JWT for the user
+        const jwtToken = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN }
+        );
+
+        res.status(200).json({ token: jwtToken });
+    } catch (error) {
+        console.error('Google Authentication Error:', error);
+        res.status(500).json({ message: 'Authentication failed' });
     }
 };
 

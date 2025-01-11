@@ -1,5 +1,9 @@
 import axios from "axios";
 
+// GOOGlE AUTH
+
+export const googleAuth = (code) => axios.get(`/auth/google?code=${code}`);
+
 // DISCUSSIONS
 export const listDiscussions = (tag) => {
     const url = tag ? `/discussion?tag=${encodeURIComponent(tag)}` : '/discussion';

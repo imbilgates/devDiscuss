@@ -17,6 +17,11 @@ const userModel = new mongoose.Schema({
     password: {
         type: String,
         required: false
+    },
+    googleId: {
+        type: String,  // Store the Google ID as a string
+        unique: true,
+        sparse: true  // Ensures the googleId is unique but not required
     }
 }, { timestamps: true });
 
