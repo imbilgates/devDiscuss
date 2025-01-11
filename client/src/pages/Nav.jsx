@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../contex/AuthContex';
 import DynamicAvatar from '../utils/DynamicAvatar';
+import { Avatar } from '@mui/material';
 
 const Nav = () => {
   const { user, error, setIsAuth, isLoading } = useAuth();
@@ -19,10 +20,10 @@ const Nav = () => {
       <nav className="navbar navbar-light bg-dark">
         <div className="container-fluid">
           <a className="navbar-brand ms-3 fs-2 fw-bold text-info" href="/">devDiscuss</a>
-          
+
           {/* Show input field and button only on large screens */}
           <div className="d-none d-sm-flex align-items-center">
-            <DynamicAvatar firstLetter={user?.name?.charAt(0).toUpperCase()} variant="rounded"/>
+              <DynamicAvatar firstLetter={user} variant="rounded" />
             <input
               type="text"
               value={user?.email}

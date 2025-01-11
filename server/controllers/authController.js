@@ -114,6 +114,25 @@ export const getUser = async (req, res) => {
     }
 };
 
+export const profileEdit = async (req, res) => {
+    const userId = req.user.id;
+    const { name, email, image } = req.body;
+
+    try {
+        const user = await userModel.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        if (email) user.email = email;
+        if (name) user.name = name;
+        if (image) user.image = image;
+        await user.save();
+
+        res.json({ message: "Profile updated successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 export const googleLogin = async (req, res) => {
     try {
         const { token } = req.body;

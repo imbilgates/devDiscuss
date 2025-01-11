@@ -39,10 +39,17 @@ const getColorByLetter = (letter) => {
 const DynamicAvatar = ({ firstLetter, ...props }) => {
   const backgroundColor = getColorByLetter(firstLetter);
 
+
   return (
-    <Avatar sx={{ marginRight: 2, backgroundColor }} {...props}>
-      {firstLetter}
-    </Avatar>
+    <>
+      {firstLetter.image ?
+        <Avatar src={firstLetter.image}></Avatar>
+        :
+        <Avatar sx={{ marginRight: 2, backgroundColor }} {...props}>
+          {firstLetter}
+        </Avatar>
+      }
+    </>
   );
 };
 

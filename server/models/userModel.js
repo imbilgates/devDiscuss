@@ -19,9 +19,14 @@ const userModel = new mongoose.Schema({
         required: false
     },
     googleId: {
-        type: String,  // Store the Google ID as a string
+        type: String,
         unique: true,
-        sparse: true  // Ensures the googleId is unique but not required
+        sparse: true
+    },
+    image: {
+        type: String,
+        required: false,
+        sparse: true
     }
 }, { timestamps: true });
 
