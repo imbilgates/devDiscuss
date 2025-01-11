@@ -26,7 +26,7 @@ const Profile = () => {
                     sx={{ borderRadius: "4px" }}
                   />
                 ) : (
-                  <DynamicAvatar firstLetter={user} variant="square" />
+                  <DynamicAvatar firstLetter={getInitials(user) || "U"} variant="rounded" />
                 )}
               </Grid>
 
