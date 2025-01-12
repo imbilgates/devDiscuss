@@ -104,8 +104,8 @@ export const getDiscussionByUser = async (req, res) => {
     const userId = req.user.id; 
     try {
         const discussions = await discussionModel.find({ user: mongoose.Types.ObjectId(userId) })
-            .populate("votes.upvotes", "name email") // Populate name and email of upvoters
-            .populate("votes.downvotes", "name email") // Populate name and email of downvoters
+            .populate("votes.upvotes", "name email image") // Populate name and email of upvoters
+            .populate("votes.downvotes", "name email image") // Populate name and email of downvoters
             .populate("user", "name email"); // Populate the owner of the discussion
 
         if (!discussions || discussions.length === 0) {

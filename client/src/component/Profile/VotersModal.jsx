@@ -32,7 +32,7 @@ const VotersModal = ({ open, upvotes, downvotes, onClose }) => (
       <List sx={{ maxHeight: 300, overflow: 'auto' }}>
         {upvotes.map((voter) => (
           <ListItem key={voter._id}>
-            <DynamicAvatar firstLetter={voter.name.charAt(0).toUpperCase()} variant={'circle'} />
+            <DynamicAvatar firstLetter={voter} variant={'circle'} />
             <ListItemText primary={voter.name.toUpperCase()} secondary={voter.email.toLowerCase()} />
           </ListItem>
         ))}
@@ -42,7 +42,7 @@ const VotersModal = ({ open, upvotes, downvotes, onClose }) => (
       <List sx={{ maxHeight: 300, overflow: 'auto' }}>
         {downvotes.map((voter) => (
           <ListItem key={voter._id}>
-            <DynamicAvatar firstLetter={voter.name.charAt(0).toUpperCase()} variant={'circle'} />
+            <DynamicAvatar firstLetter={voter} variant={'circle'} />
             <ListItemText primary={voter.name.toUpperCase()} secondary={voter.email.toLowerCase()} />
           </ListItem>
         ))}

@@ -43,7 +43,7 @@ const DynamicAvatar = ({ firstLetter, ...props }) => {
   return (
     <>
       {firstLetter.image ?
-        <Avatar src={firstLetter.image}></Avatar>
+        <Avatar sx={{ marginRight: '6px'}} src={firstLetter.image}></Avatar>
         :
         <Avatar sx={{ marginRight: 2, backgroundColor }} {...props}>
           {firstLetter}
