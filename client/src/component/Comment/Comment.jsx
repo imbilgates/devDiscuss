@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getComments, deleteComment, editComment } from '../../service/Service';
 import { Card, CardContent, Button, Typography, Box, Avatar, Skeleton, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton } from '@mui/material';
 import { useAuth } from '../../contex/AuthContex';
-import CodeDisplay from '../CodeDisplay';
+import CodeDisplay from './CodeDisplay';
 
 const Comment = ({ id, flag }) => {
     const [comments, setComments] = useState([]);

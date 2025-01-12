@@ -30,7 +30,7 @@ export const getDiscussion = async (req, res) => {
 
     try {
         const filter = tag ? { tags: tag } : {};
-        const discussion = await discussionModel.find(filter).populate("user", "name email").sort({ createdAt: -1 });
+        const discussion = await discussionModel.find(filter).populate("user", "name email image").sort({ createdAt: -1 });
         // console.log(discussion);
 
         res.json(discussion);

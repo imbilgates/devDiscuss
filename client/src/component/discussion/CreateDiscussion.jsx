@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { createDiscussion } from '../service/Service';
+import { createDiscussion } from '../../service/Service';
 import { useNavigate } from 'react-router-dom';
-import { predefinedTags } from '../utils/PreTags';
+import { predefinedTags } from '../../utils/PreTags';
 
 const CreateDiscussion = () => {
   const [loading, setLoading] = useState(false);

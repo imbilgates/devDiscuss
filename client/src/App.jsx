@@ -4,13 +4,14 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 
 
 import { useAuth } from './contex/AuthContex';
-import Auth from './component/Auth';
+import Auth from './component/auth/Auth';
 import Nav from './pages/Nav';
-import CreateDiscussion from './component/CreateDiscussion'
+import CreateDiscussion from './component/discussion/CreateDiscussion'
 import Home from './pages/Home';
 import Profile from './component/profile/Profile';
-import AllDiscussion from './component/AllDiscussion';
+import AllDiscussion from './component/discussion/AllDiscussion';
 import Loading from './utils/Loading';
+
 function App() {
   axios.defaults.baseURL = "http://localhost:5000/api";
   const navigate = useNavigate();

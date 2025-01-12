@@ -1,14 +1,19 @@
-import React from "react";
-import { Skeleton, Typography, Box, Grid, Paper } from "@mui/material";
-
+import React, { useState } from "react";
+import { Skeleton, Typography, Box, Grid, Paper, Button } from "@mui/material";
 import { useAuth } from "../../contex/AuthContex";
 import Discussion from "./Discussion";
-import DynamicAvatar from '../../utils/DynamicAvatar'
+import DynamicAvatar from '../../utils/DynamicAvatar';
+import EditProfile from "./EditProfile";
 
 const Profile = () => {
   const { user, isLoading } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
 
   const getInitials = (user) => user?.name?.charAt(0).toUpperCase();
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
 
   return (
     <Box sx={{ mt: 3, px: 2 }}>
@@ -26,7 +31,7 @@ const Profile = () => {
                     sx={{ borderRadius: "4px" }}
                   />
                 ) : (
-                  <DynamicAvatar firstLetter={getInitials(user) || "U"} variant="rounded" />
+                  <DynamicAvatar firstLetter={user || "U"}/>
                 )}
               </Grid>
 
@@ -70,13 +75,34 @@ const Profile = () => {
                 )}
               </Grid>
             </Grid>
+
+            {/* Edit Profile Button */}
+            {!isEditing && (
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+                onClick={handleEditToggle}
+              >
+                Edit Profile
+              </Button>
+            )}
           </Paper>
         </Grid>
 
+        {/* Edit Profile Component */}
+        {isEditing && (
+          <Grid item xs={12} md={8}>
+            <EditProfile user={user} setIsEditing={setIsEditing} />
+          </Grid>
+        )}
+
         {/* Discussions Section */}
-        <Grid item xs={12} md={8}>
-          <Discussion />
-        </Grid>
+        {!isEditing && (
+          <Grid item xs={12} md={8}>
+            <Discussion />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

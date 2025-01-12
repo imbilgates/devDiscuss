@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { listDiscussions, voteDiscussion } from '../service/Service';
+import { listDiscussions, voteDiscussion } from '../../service/Service';
 import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Skeleton, Avatar, Select, MenuItem } from '@mui/material';
-import DynamicAvatar from '../utils/DynamicAvatar'
+import DynamicAvatar from '../../utils/DynamicAvatar'
 
-import AddComment from "./Comment/AddComment";
-import { timeAgo } from '../utils/timeAgo';
-import { predefinedTags } from '../utils/PreTags';
-import { useAuth } from "../contex/AuthContex";
+import AddComment from "../Comment/AddComment";
+import { timeAgo } from '../../utils/timeAgo';
+import { predefinedTags } from '../../utils/PreTags';
+import { useAuth } from "../../contex/AuthContex";
 
 const AllDiscussion = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -39,9 +39,9 @@ const AllDiscussion = () => {
       const discussion = discussions.find((d) => d._id === id);
       const alreadyLiked = discussion.votes.upvotes.includes(currentUserId);
       const alreadyDisliked = discussion.votes.downvotes.includes(currentUserId);
-  
+
       let action = voteType;
-  
+
       if (voteType === "like") {
         if (alreadyLiked) action = "unlike";
         if (alreadyDisliked) action = "like"; // Remove dislike and add like
@@ -49,17 +49,17 @@ const AllDiscussion = () => {
         if (alreadyDisliked) action = "undislike";
         if (alreadyLiked) action = "dislike"; // Remove like and add dislike
       }
-  
+
       const voteData = { vote: action };
       const response = await voteDiscussion(id, voteData);
-  
+
       // Update discussion locally with backend response
       setDiscussions((prevDiscussions) =>
         prevDiscussions.map((discussion) =>
           discussion._id === id ? { ...discussion, votes: response.data.votes } : discussion
         )
       );
-  
+
       // Clear any existing error message for this discussion
       setErrorMessages((prevErrors) => ({ ...prevErrors, [id]: "" }));
     } catch (error) {
@@ -128,7 +128,12 @@ const AllDiscussion = () => {
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <DynamicAvatar firstLetter={discussion.user?.name?.charAt(0).toUpperCase() || "U"} />
+                  {discussion.user?.image ?
+                    <Avatar src={discussion.user.image} sx={{ marginRight: '5px' }}></Avatar>
+                    :
+                    <DynamicAvatar firstLetter={discussion.user?.name?.charAt(0).toUpperCase() || "U"} />
+                  }
+
                   <Typography variant="h6" sx={{ fontWeight: 'bold', marginRight: 2 }}>
                     {discussion.user?.name.toUpperCase() || "Anonymous User"}
                   </Typography>

@@ -1,9 +1,5 @@
 import axios from "axios";
 
-// GOOGlE AUTH
-
-export const googleAuth = (code) => axios.get(`/auth/google?code=${code}`);
-
 // DISCUSSIONS
 export const listDiscussions = (tag) => {
     const url = tag ? `/discussion?tag=${encodeURIComponent(tag)}` : '/discussion';
@@ -52,3 +48,10 @@ export const getAuthenticatedUser = () =>
 
 export const listAllUsers = () =>
     axios.get("/auth/users", { withCredentials: true });
+
+// GOOGlE AUTH
+export const googleAuth = (code) => axios.get(`/auth/google?code=${code}`);
+
+// EDIT PROFILE
+export const updateProfile = (updatedData) =>
+    axios.put("/auth/profile-edit", updatedData, { withCredentials: true });
