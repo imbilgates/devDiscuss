@@ -9,8 +9,8 @@ import Nav from './pages/Nav';
 import CreateDiscussion from './component/discussion/CreateDiscussion'
 import Home from './pages/Home';
 import Profile from './component/profile/Profile';
-import AllDiscussion from './component/discussion/AllDiscussion';
 import Loading from './utils/Loading';
+import DiscussionList from './component/discussion/DiscussionList';
 
 function App() {
   axios.defaults.baseURL = "http://localhost:5000/api";
@@ -41,7 +41,7 @@ function App() {
         </>}
         <Routes>
           <Route path='/auth' element={<Auth />} />
-          <Route path='/' element={<AllDiscussion />} />
+          <Route path='/' element={<DiscussionList />} />
           <Route path='/create' element={<CreateDiscussion />} />
           <Route path='/profile' element={<Profile />} />
         </Routes>

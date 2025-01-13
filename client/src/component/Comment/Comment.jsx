@@ -73,6 +73,8 @@ const Comment = ({ id, flag }) => {
         }
     };
 
+    if(comments.length === 0) return;
+
     return (
         <div>
             {comments.length > 0 &&
