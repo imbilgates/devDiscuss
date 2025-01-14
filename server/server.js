@@ -30,9 +30,9 @@ app.use("/api/auth", authRoute)
 app.use("/api/discussion", discussRoute)
 
 // use the client app
-app.use(express.static(path.join(__dirname, 'client', 'dist')));
+app.use(express.static(path.join(__dirname, '../client', 'dist')));
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => { //192.168.1.2
