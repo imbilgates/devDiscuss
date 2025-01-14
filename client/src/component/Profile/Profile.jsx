@@ -9,7 +9,7 @@ const Profile = () => {
   const { user, isLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
 
-  const getInitials = (user) => user?.name?.charAt(0).toUpperCase();
+  // const getInitials = (user) => user?.name?.charAt(0).toUpperCase();
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);

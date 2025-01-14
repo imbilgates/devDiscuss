@@ -4,7 +4,7 @@ import DynamicAvatar from '../utils/DynamicAvatar';
 import { Avatar } from '@mui/material';
 
 const Nav = () => {
-  const { user, error, setIsAuth, isLoading } = useAuth();
+  const { user, setIsAuth, isLoading } = useAuth();
 
   const handleLogout = () => {
     localStorage.removeItem("token");

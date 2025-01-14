@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box } from '@mui/material';
 import { getDiscussionByUser, updateDiscussion, deleteDiscussion } from '../../service/Service';
-import { useAuth } from '../../contex/AuthContex';
 import DiscussionsTable from './DiscussionsTable';
 import VotersModal from './VotersModal';
 
 const Discussion = () => {
-  const { user, isLoading } = useAuth();
   const [discussions, setDiscussions] = useState([]);
   const [error, setError] = useState(null);
   const [editDiscussion, setEditDiscussion] = useState(null);
@@ -52,7 +50,6 @@ const Discussion = () => {
 
   const handleCloseVotersModal = () => setVotersModal({ open: false, upvotes: [], downvotes: [] });
 
-  if (isLoading) return <Typography>Loading...</Typography>;
 
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
