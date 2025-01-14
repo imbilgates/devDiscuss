@@ -7,7 +7,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server/server.js",
+    "build": "npm install --prefix ./client && npm run build --prefix ./client && npm install"
   },
   "dependencies": {
     "axios": "^1.7.9",

@@ -18,7 +18,7 @@ const GoogleLoginAuth = () => {
             console.log('Google user info:', userInfo);
 
             // Send the Google credential to your backend to get a custom JWT
-            const { data } = await axios.post('/auth/google', {
+            const { data } = await axios.post('api/auth/google', {
                 token: response.credential,
             });
 

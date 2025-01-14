@@ -13,9 +13,9 @@ import { fileURLToPath } from "url";
 // RESOLVING Dirname for ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-console.log(__dirname);
 
 const PORT = process.env.PORT || 5000;
+
 const app = express();
 app.use(express.json());
 

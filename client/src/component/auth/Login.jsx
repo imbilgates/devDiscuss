@@ -11,7 +11,7 @@ const Login = ({ setError, setMessage, setIsAuth }) => {
         setError('');
         setMessage('');
         try {
-            const response = await axios.post('/auth/login', { email, password });
+            const response = await axios.post('api/auth/login', { email, password });
             localStorage.setItem('token', response.data.token);
             setMessage(response.data.message);
             setIsAuth(true);

@@ -12,7 +12,7 @@ const Register = ({ setError, setMessage }) => {
         setError('');
         setMessage('');
         try {
-            const response = await axios.post('/auth/register', { name, email, password });
+            const response = await axios.post('api/auth/register', { name, email, password });
             setMessage(response.data.message);
         } catch (err) {
             setError(err.response?.data?.error || 'Something went wrong');
