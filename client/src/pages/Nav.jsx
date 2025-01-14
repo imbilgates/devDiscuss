@@ -24,7 +24,7 @@ const Nav = () => {
           {/* Show input field and button only on large screens */}
           <div className="d-none d-sm-flex align-items-center">
             {user.image ? <Avatar src={user.image} sx={{ marginRight: '10px' }}></Avatar> :
-              <DynamicAvatar firstLetter={user?.name?.charAt(0).toUpperCase()} variant="rounded" />
+              <DynamicAvatar firstLetter={user} variant="rounded" />
             }
             <input
               type="text"

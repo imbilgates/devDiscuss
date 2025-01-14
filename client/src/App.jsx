@@ -13,7 +13,7 @@ import Loading from './utils/Loading';
 import DiscussionList from './component/discussion/DiscussionList';
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:5000/api";
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const { isAuth, isLoading } = useAuth()
