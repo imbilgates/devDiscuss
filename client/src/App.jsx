@@ -7,7 +7,7 @@ import Auth from './component/auth/Auth';
 import Nav from './pages/Nav';
 import CreateDiscussion from './component/discussion/CreateDiscussion'
 import Home from './pages/Home';
-import Profile from './component/profile/Profile.jsx';
+import Profile from './component/Profile/Profile';
 import Loading from './utils/Loading';
 import DiscussionList from './component/discussion/DiscussionList';
 
