@@ -19,7 +19,7 @@ const EditProfile = ({ user, setIsEditing }) => {
             formData.append("cloud_name", "dxojknmwl");
     
             try {
-                const response = await fetch("https://api.cloudinary.com/v1_1/dxojknmwl/image/upload", {
+                const response = await fetch(import.meta.env.VITE_CLOUDINARY_ID, {
                     method: "POST",
                     body: formData,
                 });

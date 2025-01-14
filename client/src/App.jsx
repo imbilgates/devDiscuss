@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
 
@@ -13,7 +12,6 @@ import Loading from './utils/Loading';
 import DiscussionList from './component/discussion/DiscussionList';
 
 function App() {
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const { isAuth, isLoading } = useAuth()
