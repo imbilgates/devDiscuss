@@ -6,6 +6,7 @@ import VotersModal from './VotersModal';
 
 const Discussion = () => {
   const [discussions, setDiscussions] = useState([]);
+  const [tags, setTags] = useState(new Set());
   const [error, setError] = useState(null);
   const [editDiscussion, setEditDiscussion] = useState(null);
   const [votersModal, setVotersModal] = useState({ open: false, upvotes: [], downvotes: [] });
@@ -15,6 +16,21 @@ const Discussion = () => {
       try {
         const response = await getDiscussionByUser();
         setDiscussions(response.data);
+
+        // Create a new set for unique tags
+        const uniqueTags = new Set();
+        response.data.forEach(item => {
+          item.tags.forEach(tag => {
+            uniqueTags.add(tag);
+          });
+        });
+
+        // Update the state with unique tags
+        setTags(uniqueTags);
+
+        // Log the unique tags here instead of directly logging `tags`
+        console.log("Unique tags:", Array.from(uniqueTags));
+
       } catch (err) {
         setError(err.response?.data?.msg || 'Error fetching discussions');
       }
@@ -67,6 +83,7 @@ const Discussion = () => {
         onSave={handleSave}
         onDelete={handleDelete}
         onOpenVotersModal={handleOpenVotersModal}
+        tags={tags}
       />
       <VotersModal
         open={votersModal.open}

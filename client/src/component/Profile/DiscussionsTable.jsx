@@ -20,7 +20,6 @@ import {
   Typography,
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { predefinedTags } from '../../utils/PreTags';
 
 const DiscussionsTable = ({
   discussions,
@@ -28,7 +27,8 @@ const DiscussionsTable = ({
   onEdit,
   onSave,
   onDelete,
-  onOpenVotersModal
+  onOpenVotersModal,
+  tags
 }) => (
   <TableContainer
     component={Paper}
@@ -82,7 +82,7 @@ const DiscussionsTable = ({
                     value={editDiscussion.tags}
                     onChange={(e) => onEdit({ ...editDiscussion, tags: e.target.value })}
                   >
-                    {predefinedTags.map((tag) => (
+                    {[...tags].map((tag) => (
                       <MenuItem key={tag} value={tag}>
                         {tag}
                       </MenuItem>

@@ -5,8 +5,8 @@ import { timeAgo } from '../../utils/timeAgo';
 import AddComment from "../Comment/AddComment";
 
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {
+  
   const { title, description, user, votes, tags, createdAt, _id } = discussion;
-
 
   return (
     <Card key={_id} sx={styles.card}>
