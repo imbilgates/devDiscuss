@@ -1,7 +1,6 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import add from '../assets/add.png';
-import list from '../assets/list.png';
+import explore from '../assets/explore.png';
 import profile from '../assets/profile.png';
 
 const Button = () => {
@@ -23,7 +22,7 @@ const Button = () => {
   return (
     <div className="d-flex justify-content-center align-items-center mt-4">
       <button onClick={handleListClick} className="btn p-0 m-2">
-        <img src={list} alt="List Discussion" className="rounded-circle" style={{ width: '40px', height: '40px' }} />
+        <img src={explore} alt="List Discussion" className="rounded-circle" style={{ width: '40px', height: '40px' }} />
       </button>
       <button onClick={handleAddClick} className="btn p-0 m-2">
         <img src={add} alt="Add Discussion" className="rounded-circle" style={{ width: '40px', height: '40px' }} />

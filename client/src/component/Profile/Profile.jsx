@@ -29,7 +29,7 @@ const Profile = () => {
                     sx={styles.skeletonAvatar}
                   />
                 ) : (
-                  <DynamicAvatar text={user || "U"} />
+                  <DynamicAvatar text={user || "U"} type="profile" />
                 )}
               </Grid>
 
@@ -73,7 +73,7 @@ const Profile = () => {
                 ) : (
                   <>
                     <Typography variant="body2" color="textSecondary">
-                      <strong>Created At:</strong>{" "}
+                      <strong>Account Created At:</strong>{" "}
                       {new Date(user?.createdAt).toLocaleDateString()}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" mt={1}>
@@ -89,7 +89,7 @@ const Profile = () => {
 
         {/* Edit Profile Component */}
         {isEditing && (
-            <EditProfile user={user} setIsEditing={setIsEditing} />
+          <EditProfile user={user} setIsEditing={setIsEditing} />
         )}
 
         {/* Discussions Section */}

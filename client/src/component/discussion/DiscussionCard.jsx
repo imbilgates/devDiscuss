@@ -2,6 +2,8 @@ import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, 
 import DynamicAvatar from '../../utils/DynamicAvatar';
 import { timeAgo } from '../../utils/timeAgo';
 import AddComment from "../Comment/AddComment";
+import { ArrowUp , ArrowDown  } from 'lucide-react';
+
 
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {
   
@@ -59,7 +61,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
           }}
           onClick={() => handleVote(_id, "like")}
         >
-          👍 {votes.upvotes.length || 0}
+          <ArrowUp /> {votes.upvotes.length || 0}
         </Button>
 
         <Button
@@ -75,7 +77,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
           }}
           onClick={() => handleVote(_id, "dislike")}
         >
-          👎 {votes.downvotes.length || 0}
+          <ArrowDown /> {votes.downvotes.length || 0}
         </Button>
       </CardActions>
 

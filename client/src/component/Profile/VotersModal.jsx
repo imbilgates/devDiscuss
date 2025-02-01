@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Typography, Modal, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close'; // Close icon
 import DynamicAvatar from '../../utils/DynamicAvatar';
@@ -32,7 +31,7 @@ const VotersModal = ({ open, upvotes, downvotes, onClose }) => (
       <List sx={{ maxHeight: 300, overflow: 'auto' }}>
         {upvotes.map((voter) => (
           <ListItem key={voter._id}>
-            <DynamicAvatar firstLetter={voter} variant={'circle'} />
+            <DynamicAvatar firstLetter={voter} variant={'circle'}/>
             <ListItemText primary={voter.name.toUpperCase()} secondary={voter.email.toLowerCase()} />
           </ListItem>
         ))}
