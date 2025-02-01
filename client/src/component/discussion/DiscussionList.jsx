@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { listDiscussions, voteDiscussion } from '../../service/Service';
 import { Select, MenuItem, Skeleton } from '@mui/material';
 import DiscussionCard from './DiscussionCard';

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { TextField, Button, Box, Avatar, Typography, IconButton } from "@mui/material";
+import { useState } from "react";
+import { TextField, Button, Box, Avatar, Typography, IconButton, Dialog } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { updateProfile } from "../../service/Service";
 
@@ -43,7 +43,7 @@ const EditProfile = ({ user, setIsEditing }) => {
                 const data = await response.json();
                 setImage(data.secure_url); // Store the image URL in state
             } catch (error) {
-                setError("Error uploading image. Please try again.");
+                setError("Error uploading image. Please try again." + error);
             }
         } else {
             setError("Please select a valid image.");
@@ -72,97 +72,127 @@ const EditProfile = ({ user, setIsEditing }) => {
         try {
             await updateProfile(updatedData);
             setMessage("Profile updated successfully!");
+            setIsEditing(false); // Close the dialog after successful update
         } catch (error) {
-            setError("Error updating profile. Please try again.");
+            setError("Error updating profile. Please try again." + error);
         }
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h6" gutterBottom>
-                    Edit Profile
-                </Typography>
-                <IconButton onClick={() => setIsEditing(false)} color="default">
-                    <CloseIcon />
-                </IconButton>
-            </Box>
+        <Dialog open={true} onClose={() => setIsEditing(false)} fullWidth maxWidth="sm">
+            <Box component="form" onSubmit={handleSubmit} sx={styles.formContainer}>
+                <Box sx={styles.header}>
+                    <Typography variant="h5" fontWeight="bold">
+                        Edit Profile
+                    </Typography>
+                    <IconButton onClick={() => setIsEditing(false)} sx={styles.closeButton}>
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
 
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mt: 2,
-                    border: "2px dashed #ccc",
-                    borderRadius: "8px",
-                    padding: "16px",
-                    textAlign: "center",
-                    cursor: "pointer",
-                    backgroundColor: dragOver ? "#f0f8ff" : "transparent",
-                }}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-            >
-                <Typography sx={{ flexGrow: 1 }}>
-                    Drag and drop an image here or click the button below to upload.
-                </Typography>
-            </Box>
-
-            <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-                <Button
-                    variant="outlined"
-                    component="label"
-                    sx={{
-                        backgroundColor: "#f0f0f0",
-                        padding: "8px 16px",
-                        fontWeight: "bold",
-                        "&:hover": { backgroundColor: "#ddd" },
-                    }}
+                <Box
+                    sx={styles.dropArea(dragOver)}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    component="label" // Make the drop area clickable
                 >
-                    Upload Image
+                    <Typography color="text.secondary">
+                        Drag and drop an image here, or click to upload.
+                    </Typography>
                     <input
                         type="file"
                         accept="image/*"
                         hidden
                         onChange={handleImageChange}
                     />
+                    {image && <Avatar sx={styles.avatar} src={image} />}
+                </Box>
+
+                <TextField
+                    label="Name"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    sx={styles.textField}
+                />
+
+                {error && <Typography sx={styles.errorText}>{error}</Typography>}
+                {message && <Typography sx={styles.successText}>{message}</Typography>}
+
+                <Button type="submit" fullWidth variant="contained" sx={styles.submitButton}>
+                    Update Profile
                 </Button>
-
-                {image && (
-                    <Avatar
-                        sx={{
-                            width: 80,
-                            height: 80,
-                            borderRadius: "8px",
-                            objectFit: "cover",
-                            border: "2px solid #fff",
-                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                            marginLeft: 2,
-                        }}
-                        src={image}
-                    />
-                )}
             </Box>
-
-            <TextField
-                label="Name"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-            />
-
-            {error && <Typography color="error">{error}</Typography>}
-            {message && <Typography color="success.main">{message}</Typography>}
-
-            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-                Update Profile
-            </Button>
-        </Box>
+        </Dialog>
     );
 };
 
 export default EditProfile;
+
+const styles = {
+    formContainer: {
+        mt: 3,
+        p: 3,
+        borderRadius: 2,
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "#fff",
+    },
+    header: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        mb: 3,
+    },
+    closeButton: {
+        backgroundColor: "#f5f5f5",
+        "&:hover": { backgroundColor: "#e0e0e0" },
+    },
+    dropArea: (dragOver) => ({
+        textAlign: "center",
+        p: 3,
+        border: "2px dashed #ddd",
+        borderRadius: 2,
+        cursor: "pointer",
+        backgroundColor: dragOver ? "#f9f9ff" : "transparent",
+        transition: "background-color 0.3s",
+    }),
+    avatar: {
+        width: 80,
+        height: 80,
+        mt: 2,
+        border: "2px solid #3f51b5",
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    },
+    textField: {
+        "& .MuiInputLabel-root": { fontWeight: 500 },
+        "& .MuiOutlinedInput-root": {
+            borderRadius: 2,
+            "& fieldset": { borderColor: "#ccc" },
+            "&:hover fieldset": { borderColor: "#3f51b5" },
+            "&.Mui-focused fieldset": { borderColor: "#3f51b5" },
+        },
+    },
+    errorText: {
+        color: "error.main",
+        fontSize: "0.875rem",
+        mt: 1,
+    },
+    successText: {
+        color: "success.main",
+        fontSize: "0.875rem",
+        mt: 1,
+    },
+    submitButton: {
+        mt: 3,
+        py: 1.5,
+        fontWeight: "bold",
+        backgroundColor: "#3f51b5",
+        "&:hover": {
+            backgroundColor: "#32408f",
+        },
+    },
+};

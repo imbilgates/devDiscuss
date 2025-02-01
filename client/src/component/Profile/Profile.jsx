@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Skeleton, Typography, Box, Grid, Paper, Button } from "@mui/material";
 import { useAuth } from "../../contex/AuthContex";
 import Discussion from "./Discussion";
@@ -9,34 +9,32 @@ const Profile = () => {
   const { user, isLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
 
-  // const getInitials = (user) => user?.name?.charAt(0).toUpperCase();
-
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
 
   return (
-    <Box sx={{ mt: 3, px: 2 }}>
+    <Box sx={styles.profileContainer}>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} md={8}>
-          <Paper elevation={3} sx={{ p: 3, borderRadius: "8px" }}>
+          <Paper elevation={3} sx={styles.paper}>
             <Grid container spacing={2} alignItems="center">
               {/* Profile Picture */}
-              <Grid item xs={12} sm={3} display="flex" justifyContent="center">
+              <Grid item xs={12} sm={2} display="flex" justifyContent="center">
                 {isLoading ? (
                   <Skeleton
-                    variant="rectangular"
-                    width={80}
-                    height={80}
-                    sx={{ borderRadius: "4px" }}
+                    variant="circular"
+                    width={50}
+                    height={50}
+                    sx={styles.skeletonAvatar}
                   />
                 ) : (
-                  <DynamicAvatar firstLetter={user || "U"}/>
+                  <DynamicAvatar text={user || "U"} />
                 )}
               </Grid>
 
               {/* User Info */}
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={7}>
                 {isLoading ? (
                   <>
                     <Skeleton width="70%" height={30} />
@@ -44,10 +42,21 @@ const Profile = () => {
                   </>
                 ) : (
                   <>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h4" sx={styles.userName}>
                       {user?.name.toUpperCase()}
+                      {/* Edit Profile Button */}
+                      {!isEditing && (
+                        <Button
+                          color="warning"
+                          sx={styles.editButton}
+                          onClick={handleEditToggle}
+                        >
+                          ✍️
+                        </Button>
+                      )}
                     </Typography>
-                    <Typography variant="body1" color="textSecondary">
+
+                    <Typography variant="body2" sx={styles.email} color="textSecondary">
                       {user?.email}
                     </Typography>
                   </>
@@ -75,26 +84,12 @@ const Profile = () => {
                 )}
               </Grid>
             </Grid>
-
-            {/* Edit Profile Button */}
-            {!isEditing && (
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-                onClick={handleEditToggle}
-              >
-                Edit Profile
-              </Button>
-            )}
           </Paper>
         </Grid>
 
         {/* Edit Profile Component */}
         {isEditing && (
-          <Grid item xs={12} md={8}>
             <EditProfile user={user} setIsEditing={setIsEditing} />
-          </Grid>
         )}
 
         {/* Discussions Section */}
@@ -106,6 +101,34 @@ const Profile = () => {
       </Grid>
     </Box>
   );
+};
+
+// Styles
+const styles = {
+  profileContainer: {
+    mt: 3,
+    px: 2,
+  },
+  paper: {
+    p: 3,
+    borderRadius: "8px",
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+  },
+  skeletonAvatar: {
+    borderRadius: "50%",
+  },
+  userName: {
+    fontWeight: "bold",
+    mb: 0.5,
+    marginLeft: "30px"
+  },
+  email: {
+    mb: 0.5,
+    marginLeft: "30px"
+  },
+  editButton: {
+    mt: 2,
+  },
 };
 
 export default Profile;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider } from '@mui/material';
 import DynamicAvatar from '../../utils/DynamicAvatar';
 import { timeAgo } from '../../utils/timeAgo';

@@ -1,7 +1,6 @@
-import React from 'react';
 import { useAuth } from '../contex/AuthContex';
 import DynamicAvatar from '../utils/DynamicAvatar';
-import { Avatar } from '@mui/material';
+import { Avatar, CircularProgress } from '@mui/material';
 
 const Nav = () => {
   const { user, setIsAuth, isLoading } = useAuth();
@@ -12,7 +11,11 @@ const Nav = () => {
   }
 
   if (isLoading) {
-    return "Loading...";
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (
@@ -24,7 +27,7 @@ const Nav = () => {
           {/* Show input field and button only on large screens */}
           <div className="d-none d-sm-flex align-items-center">
             {user?.image ? <Avatar src={user?.image} sx={{ marginRight: '10px' }}></Avatar> :
-              <DynamicAvatar firstLetter={user} variant="rounded" />
+              <DynamicAvatar DynamicAvatar={user} variant="rounded" />
             }
             <input
               type="text"
