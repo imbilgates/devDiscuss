@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { listDiscussions, voteDiscussion } from '../../service/Service';
-import { Select, MenuItem, Skeleton } from '@mui/material';
+import { Select, MenuItem, Skeleton, FormControl, Box } from '@mui/material';
 import DiscussionCard from './DiscussionCard';
 import { useAuth } from "../../contex/AuthContex";
 
@@ -24,18 +24,18 @@ const DiscussionList = () => {
     try {
       const response = await listDiscussions(searchTag);
       setDiscussions(response.data);
-  
+
       // Create a new set for unique tags
-      const uniqueTags = new Set(); 
+      const uniqueTags = new Set();
       response.data.forEach(item => {
         item.tags.forEach(tag => {
-          uniqueTags.add(tag); 
+          uniqueTags.add(tag);
         });
       });
-  
+
       // Update the state with unique tags
       setTags(uniqueTags);
-  
+
       // Log the unique tags here instead of directly logging `tags`
       console.log("Unique tags:", Array.from(uniqueTags));
     } catch (error) {
@@ -44,7 +44,7 @@ const DiscussionList = () => {
       setLoading(false);
     }
   };
-  
+
 
   const handleVote = async (id, voteType) => {
     try {
@@ -103,29 +103,39 @@ const DiscussionList = () => {
 
   return (
     <div className="container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <Select
-          value={searchTag}
-          onChange={handleTagChange}
-          displayEmpty
-          variant="outlined"
-          size="small"
-          sx={{ width: "200px" }}
-        >
-          <MenuItem value="">All Tags</MenuItem>
-          {[...tags]?.map((tag) => (
-            <MenuItem key={tag} value={tag}>
-              {tag}
-            </MenuItem>
-          ))}
-        </Select>
 
-        <select className="form-select w-auto" value={filter} onChange={handleFilterChange}>
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="popular">Most Popular</option>
-        </select>
-      </div>
+      <Box display="flex" alignItems="center" sx={{ gap: "9px", mb: 2 }}>
+        {/* Tag Filter Dropdown */}
+        <FormControl size="small" sx={{ minWidth: 50 }}>
+          <Select
+            value={searchTag}
+            onChange={handleTagChange}
+            displayEmpty
+            variant="outlined"
+          >
+            <MenuItem value="">All Tags</MenuItem>
+            {[...tags]?.map((tag) => (
+              <MenuItem key={tag} value={tag}>
+                {tag}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* Sorting Filter Dropdown (Converted to MUI) */}
+        <FormControl size="small" sx={{ minWidth: 50 }}>
+          <Select
+            value={filter}
+            onChange={handleFilterChange}
+            variant="outlined"
+          >
+            <MenuItem value="newest">Newest</MenuItem>
+            <MenuItem value="oldest">Oldest</MenuItem>
+            <MenuItem value="popular">Most Popular</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
 
       {loading
         ? Array(5).fill().map((_, index) => (
