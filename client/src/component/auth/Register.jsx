@@ -1,8 +1,10 @@
+import { Box, TextField, Button, Grid } from "@mui/material";
 import { useState } from 'react';
 import axios from 'axios';
-import { TextField, Button, Box } from '@mui/material';
+import { toast } from "react-toastify";
 
-const Register = ({ setError, setMessage }) => {
+
+const Register = ({ setError, setMessage, setIsLogin }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,37 +16,48 @@ const Register = ({ setError, setMessage }) => {
         try {
             const response = await axios.post('api/auth/register', { name, email, password });
             setMessage(response.data.message);
+            toast.success('Registerd successfull!');
+            setIsLogin(prev => !prev);
         } catch (err) {
             setError(err.response?.data?.error || 'Something went wrong');
+            toast.error(err.response?.data?.error || 'Something went wrong');
         }
     };
 
+
     return (
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <TextField
-                label="Name"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-            />
-            <TextField
-                label="Email"
-                type="email"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Name"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Email"
+                        type="email"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </Grid>
+            </Grid>
             <TextField
                 label="Password"
                 type="password"
                 variant="outlined"
                 fullWidth
+                size="small"
                 margin="normal"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -55,6 +68,7 @@ const Register = ({ setError, setMessage }) => {
             </Button>
         </Box>
     );
+    
 };
 
 export default Register;

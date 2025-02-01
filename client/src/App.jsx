@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Profile from './component/Profile/Profile';
 import Loading from './utils/Loading';
 import DiscussionList from './component/discussion/DiscussionList';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const navigate = useNavigate();
@@ -24,26 +25,23 @@ function App() {
     }
   }, [isAuth]);
 
-
-
   if (isLoading) {
     return <Loading isLoading={isLoading} text='' />;
   }
 
   return (
     <>
-      <div>
-        {isAuth && <>
-          <Nav />
-          <Home />
-        </>}
-        <Routes>
-          <Route path='/auth' element={<Auth />} />
-          <Route path='/' element={<DiscussionList />} />
-          <Route path='/create' element={<CreateDiscussion />} />
-          <Route path='/profile' element={<Profile />} />
-        </Routes>
-      </div>
+      <ToastContainer />
+      {isAuth && <>
+        <Nav />
+        <Home />
+      </>}
+      <Routes>
+        <Route path='/auth' element={<Auth />} />
+        <Route path='/' element={<DiscussionList />} />
+        <Route path='/create' element={<CreateDiscussion />} />
+        <Route path='/profile' element={<Profile />} />
+      </Routes>
     </>
   );
 }

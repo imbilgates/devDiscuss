@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Typography, Box } from '@mui/material';
 import { getDiscussionByUser, updateDiscussion, deleteDiscussion } from '../../service/Service';
 import DiscussionsTable from './DiscussionsTable';
 import VotersModal from './VotersModal';
-
+import { toast } from 'react-toastify'
 const Discussion = () => {
   const [discussions, setDiscussions] = useState([]);
   const [tags, setTags] = useState(new Set());
@@ -48,8 +48,10 @@ const Discussion = () => {
         discussion._id === id ? { ...discussion, ...editDiscussion } : discussion
       ));
       setEditDiscussion(null);
+      toast.success('Edited Successfully!')
     } catch (err) {
-      setError('Error saving discussion');
+      setError('Error saving discussion', err);
+      toast.error('Error saving discussion', err);
     }
   };
 
@@ -57,8 +59,10 @@ const Discussion = () => {
     try {
       await deleteDiscussion(id);
       setDiscussions(discussions.filter(discussion => discussion._id !== id));
+      toast.success('Deleted Successfully!')
     } catch (err) {
-      setError('Error deleting discussion');
+      setError('Error deleting discussion', err);
+      toast.error('Error deleting discussion', err);
     }
   };
 

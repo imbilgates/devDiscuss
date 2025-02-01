@@ -21,7 +21,7 @@ const Auth = () => {
     };
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ padding: 2 }}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ padding: 2,  backgroundColor: '#000' }}>
             <Paper elevation={3} sx={{ width: 350, padding: 3, borderRadius: 2, textAlign: 'center', backgroundColor: '#fff' }}>
                 <Typography variant="h5" component="h2" gutterBottom>
                     {isLogin ? 'Login' : 'Register'}
@@ -33,7 +33,7 @@ const Auth = () => {
                 {isLogin ? (
                     <Login setError={setError} setMessage={setMessage} setIsAuth={setIsAuth} />
                 ) : (
-                    <Register setError={setError} setMessage={setMessage} />
+                    <Register setError={setError} setMessage={setMessage} setIsLogin={setIsLogin}/>
                 )}
 
                 <AuthToggle isLogin={isLogin} handleToggle={handleToggle} />
