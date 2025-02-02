@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Skeleton, Typography, Box, Grid, Paper, Button } from "@mui/material";
+import { TbUserEdit } from "react-icons/tb";
+
 import { useAuth } from "../../contex/AuthContex";
 import Discussion from "./Discussion";
 import DynamicAvatar from '../../utils/DynamicAvatar';
@@ -51,7 +53,7 @@ const Profile = () => {
                           sx={styles.editButton}
                           onClick={handleEditToggle}
                         >
-                          ✍️
+                          <TbUserEdit size={20}/>
                         </Button>
                       )}
                     </Typography>

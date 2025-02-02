@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { addComment } from '../../service/Service';
 import { TextField, Button, Box, CircularProgress } from '@mui/material';
 import Comment from './Comment';
@@ -27,7 +27,7 @@ const AddComment = ({ id }) => {
             await addComment(id, commentData);
             setCommentText('');
         } catch (error) {
-            setError('Error adding comment. Please try again later.');
+            setError('Error adding comment. Please try again later.', error);
         } finally {
             setLoading(false);
         }

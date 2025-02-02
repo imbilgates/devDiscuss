@@ -1,5 +1,4 @@
 import { GoogleLogin } from '@react-oauth/google'
-import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contex/AuthContex'
 import axios from 'axios'
@@ -13,18 +12,14 @@ const GoogleLoginAuth = () => {
 
     const handleLogin = async (response) => {
         try {
-            // Decode the Google response token
-            const userInfo = jwtDecode(response.credential);
-            console.log('Google user info:', userInfo);
-
             // Send the Google credential to your backend to get a custom JWT
             const { data } = await axios.post('api/auth/google', {
                 token: response.credential,
             });
             localStorage.setItem('token', data.token);
             setIsAuth(true);
-            showToast('Login successfull!', 'success')
             navigate('/');
+            showToast('Login successfull!', 'success')
         } catch (error) {
             console.error('Error during login:', error);
         }

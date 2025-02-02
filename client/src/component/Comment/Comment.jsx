@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { getComments, deleteComment, editComment } from '../../service/Service';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, Button, Typography, Box, Avatar, Skeleton, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton } from '@mui/material';
+import { TbTrashXFilled } from "react-icons/tb";
+import { BiMessageRoundedEdit } from "react-icons/bi";
+
+import { getComments, deleteComment, editComment } from '../../service/Service';
 import { useAuth } from '../../contex/AuthContex';
 import CodeDisplay from './CodeDisplay';
+import { showToast } from '../../utils/toastUtils'
 
 const Comment = ({ id, flag }) => {
     const [comments, setComments] = useState([]);
@@ -49,8 +53,10 @@ const Comment = ({ id, flag }) => {
         try {
             await deleteComment(id, commentId);
             setComments(comments.filter(comment => comment._id !== commentId)); // Remove the deleted comment from the state
+            showToast("Comment Deleted Successfully!", "delete")
         } catch (error) {
             console.error("Error deleting comment:", error);
+            showToast("Error deleting comment!", "delete")
         }
     };
 
@@ -68,12 +74,14 @@ const Comment = ({ id, flag }) => {
             ));
             setEditingCommentId(null); // Reset editing state
             setEditedCommentText('');
+            showToast("Comment Edited Successfully!", "success")
         } catch (error) {
             console.error("Error editing comment:", error);
+            showToast("Error editing comment!", "error")
         }
     };
 
-    if(comments.length === 0) return;
+    if (comments.length === 0) return;
 
     return (
         <div>
@@ -84,7 +92,7 @@ const Comment = ({ id, flag }) => {
             }
 
             <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
-                <Box sx={{ backgroundColor: 'tan'}}>
+                <Box sx={{ backgroundColor: 'tan' }}>
                     <DialogTitle>Comments</DialogTitle>
                     <DialogContent >
                         {loading && (
@@ -135,7 +143,7 @@ const Comment = ({ id, flag }) => {
                                                     rows={3}
                                                 />
                                             ) : (
-                                                <CodeDisplay code={comment.commentText} /> 
+                                                <CodeDisplay code={comment.commentText} />
                                             )}
                                         </Typography>
                                     )}
@@ -144,7 +152,7 @@ const Comment = ({ id, flag }) => {
                                     {comment?.user._id === currentUserId &&
                                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, marginTop: 1 }}>
                                             <IconButton onClick={() => handleDeleteComment(comment._id)} color="error">
-                                                🗑️
+                                                <TbTrashXFilled />
                                             </IconButton>
                                             {editingCommentId === comment._id ? (
                                                 <Button onClick={handleSaveEditComment} color="primary">
@@ -152,7 +160,7 @@ const Comment = ({ id, flag }) => {
                                                 </Button>
                                             ) : (
                                                 <IconButton onClick={() => handleEditComment(comment._id)} color="primary">
-                                                    ✍️
+                                                    <BiMessageRoundedEdit />
                                                 </IconButton>
                                             )}
                                         </Box>
