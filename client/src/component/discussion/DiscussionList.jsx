@@ -35,9 +35,6 @@ const DiscussionList = () => {
 
       // Update the state with unique tags
       setTags(uniqueTags);
-
-      // Log the unique tags here instead of directly logging `tags`
-      console.log("Unique tags:", Array.from(uniqueTags));
     } catch (error) {
       console.error("Error fetching discussions:", error);
     } finally {

@@ -3,7 +3,8 @@ import { Typography, Box } from '@mui/material';
 import { getDiscussionByUser, updateDiscussion, deleteDiscussion } from '../../service/Service';
 import DiscussionsTable from './DiscussionsTable';
 import VotersModal from './VotersModal';
-import { toast } from 'react-toastify'
+import { showToast } from '../../utils/toastUtils';
+
 const Discussion = () => {
   const [discussions, setDiscussions] = useState([]);
   const [tags, setTags] = useState(new Set());
@@ -48,10 +49,10 @@ const Discussion = () => {
         discussion._id === id ? { ...discussion, ...editDiscussion } : discussion
       ));
       setEditDiscussion(null);
-      toast.success('Edited Successfully!')
+      showToast('Edited Successfully!', 'success')
     } catch (err) {
       setError('Error saving discussion', err);
-      toast.error('Error saving discussion', err);
+      showToast('Error saving discussion', "error");
     }
   };
 
@@ -59,10 +60,10 @@ const Discussion = () => {
     try {
       await deleteDiscussion(id);
       setDiscussions(discussions.filter(discussion => discussion._id !== id));
-      toast.success('Deleted Successfully!')
+      showToast("Deleted Successfully!", "delete");
     } catch (err) {
       setError('Error deleting discussion', err);
-      toast.error('Error deleting discussion', err);
+      showToast('Error deleting discussion', "error");
     }
   };
 

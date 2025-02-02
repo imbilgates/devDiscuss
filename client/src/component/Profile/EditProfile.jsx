@@ -2,7 +2,7 @@ import { useState } from "react";
 import { TextField, Button, Box, Avatar, Typography, IconButton, Dialog } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { updateProfile } from "../../service/Service";
-import { toast } from 'react-toastify'
+import { showToast } from "../../utils/toastUtils";
 
 const EditProfile = ({ user, setIsEditing }) => {
     const [name, setName] = useState(user?.name || "");
@@ -74,10 +74,10 @@ const EditProfile = ({ user, setIsEditing }) => {
             await updateProfile(updatedData);
             setMessage("Profile updated successfully!");
             setIsEditing(false); // Close the dialog after successful update
-            toast.success("Profile updated successfully!")
+            showToast("Profile updated successfully!", "success")
         } catch (error) {
             setError("Error updating profile. Please try again." + error);
-            toast.error("Error updating profile. Please try again." + error)
+            showToast("Error updating profile. Please try again.", "error")
         }
     };
 

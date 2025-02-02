@@ -1,7 +1,7 @@
 import { Box, TextField, Button, Grid } from "@mui/material";
 import { useState } from 'react';
 import axios from 'axios';
-import { toast } from "react-toastify";
+import { showToast } from "../../utils/toastUtils";
 
 
 const Register = ({ setError, setMessage, setIsLogin }) => {
@@ -16,11 +16,11 @@ const Register = ({ setError, setMessage, setIsLogin }) => {
         try {
             const response = await axios.post('api/auth/register', { name, email, password });
             setMessage(response.data.message);
-            toast.success('Registerd successfull!');
             setIsLogin(prev => !prev);
+            showToast('Registerd successfull!', 'success')
         } catch (err) {
             setError(err.response?.data?.error || 'Something went wrong');
-            toast.error(err.response?.data?.error || 'Something went wrong');
+            showToast(err.response?.data?.error || 'Something went wrong', 'error');
         }
     };
 

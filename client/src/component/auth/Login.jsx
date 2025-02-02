@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box } from '@mui/material';
-import { toast } from 'react-toastify';
+import { showToast } from '../../utils/toastUtils';
 
 const Login = ({ setError, setMessage, setIsAuth }) => {
     const [email, setEmail] = useState('');
@@ -16,10 +16,10 @@ const Login = ({ setError, setMessage, setIsAuth }) => {
             localStorage.setItem('token', response.data.token);
             setMessage(response.data.message);
             setIsAuth(true);
-            toast.success('Login successfull!');
+            showToast('Login successfull!', 'success')
         } catch (err) {
             setError(err.response?.data?.error || 'Something went wrong');
-            toast.error(err.response?.data?.error || 'Something went wrong');
+            showToast(err.response?.data?.error || 'Something went wrong', 'error');
         }
     };
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createDiscussion } from '../../service/Service';
 import { useNavigate } from 'react-router-dom';
 import { predefinedTags } from '../../utils/PreTags';
-import { toast } from "react-toastify";
+import { showToast } from "../../utils/toastUtils";
 
 const CreateDiscussion = () => {
   const [loading, setLoading] = useState(false);
@@ -15,28 +15,12 @@ const CreateDiscussion = () => {
     if (tag === "") return;
 
     if (!predefinedTags.includes(tag)) {
-      toast("You can only add predefined tags.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-      });
+      showToast("You can only add predefined tags.", "error")
       return;
     }
 
     if (tags.length >= 3) {
-      toast.error("You cannot add more than 3 tags.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-      });
+      showToast("You cannot add more than 3 tags.", "error")
       return;
     }
 
@@ -69,10 +53,11 @@ const CreateDiscussion = () => {
       setTags([]);
       setSearchInput("");
       navigate("/");
+      showToast("Discussion Created Successfully!", "success")
     } catch (error) {
       setLoading(false);
       console.error("Error creating discussion:", error);
-      alert("Error creating discussion. Please try again.");
+      showToast("Error creating discussion. Please try again.", "error");
     }
   };
 
