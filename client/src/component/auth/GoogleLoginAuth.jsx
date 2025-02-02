@@ -3,6 +3,7 @@ import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contex/AuthContex'
 import axios from 'axios'
+import { showToast } from '../../utils/toastUtils'
 
 const GoogleLoginAuth = () => {
 
@@ -20,12 +21,9 @@ const GoogleLoginAuth = () => {
             const { data } = await axios.post('api/auth/google', {
                 token: response.credential,
             });
-
-            console.log(data);
-            
-            
             localStorage.setItem('token', data.token);
             setIsAuth(true);
+            showToast('Login successfull!', 'success')
             navigate('/');
         } catch (error) {
             console.error('Error during login:', error);
