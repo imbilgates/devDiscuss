@@ -24,7 +24,6 @@ const DiscussionList = () => {
     try {
       const response = await listDiscussions(searchTag);
       setDiscussions(response.data);
-
       // Create a new set for unique tags
       const uniqueTags = new Set();
       response.data.forEach(item => {

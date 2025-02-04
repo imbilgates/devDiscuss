@@ -14,6 +14,10 @@ const discussModel = new mongoose.Schema({
             type: String,
         },
     ],
+    code: {
+        type: String,
+        default: "", 
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

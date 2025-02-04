@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 // DISCUSSION
 export const createDiscussion = async (req, res) => {
 
-    const { title, description, tags } = req.body;
+    const { title, description, tags, code } = req.body;
     const userId = req.user.id;
 
 
@@ -13,6 +13,7 @@ export const createDiscussion = async (req, res) => {
             title,
             description,
             tags,
+            code,
             user: userId
         })
         await discussion.save();
@@ -25,25 +26,32 @@ export const createDiscussion = async (req, res) => {
 }
 
 export const getDiscussion = async (req, res) => {
-
     const { tag } = req.query;
 
     try {
         const filter = tag ? { tags: tag } : {};
-        const discussion = await discussionModel.find(filter).populate("user", "name email image").sort({ createdAt: -1 });
-        // console.log(discussion);
+        const discussions = await discussionModel
+            .find(filter)
+            .populate("user", "name email image")
+            .sort({ createdAt: -1 })
+            .lean(); // Fetch plain JavaScript objects for better performance
 
-        res.json(discussion);
+        // Add commentsCount to each discussion
+        const discussionsWithCount = discussions.map(discussion => ({
+            ...discussion,
+            commentsCount: discussion.comments.length,
+        }));
+
+        res.json(discussionsWithCount);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-
-}
+};
 
 export const updateDiscussion = async (req, res) => {
 
-    const { title, description, tags } = req.body;
+    const { title, description, tags, code } = req.body;
     const discussionId = req.params.id;
 
     try {
@@ -52,6 +60,7 @@ export const updateDiscussion = async (req, res) => {
         if (title) discussion.title = title;
         if (description) discussion.description = description;
         if (tags) discussion.tags = tags;
+        if (code) discussion.code = code;
 
         await discussion.save();
         res.json(discussion);
@@ -101,7 +110,7 @@ export const getDiscussionById = async (req, res) => {
 }
 
 export const getDiscussionByUser = async (req, res) => {
-    const userId = req.user.id; 
+    const userId = req.user.id;
     try {
         const discussions = await discussionModel.find({ user: mongoose.Types.ObjectId(userId) })
             .populate("votes.upvotes", "name email image") // Populate name and email of upvoters

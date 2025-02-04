@@ -1,67 +1,129 @@
-import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider, IconButton } from '@mui/material';
+import { ArrowUp, ArrowDown } from 'lucide-react';
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { PlayArrow, RestartAlt } from '@mui/icons-material';
+
 import DynamicAvatar from '../../utils/DynamicAvatar';
 import { timeAgo } from '../../utils/timeAgo';
-import AddComment from "../Comment/AddComment";
-import { ArrowUp , ArrowDown  } from 'lucide-react';
-
+import useAddComment from '../../hooks/useAddComment';
+import Comment from '../Comment/Comment';
+import { showToast } from '../../utils/toastUtils';
 
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {
-  
-  const { title, description, user, votes, tags, createdAt, _id } = discussion;
+  const [output, setOutput] = useState([]);
+  const [showPostButton, setShowPostButton] = useState(false);
+
+  const { handleCommentSubmit, loading, setCommentText, commentText } = useAddComment();
+
+  useEffect(() => {
+    setShowPostButton(output !== "");
+  }, [discussion.code, output]);
+
+  const runCode = () => {
+    let logs = [];
+    const originalConsoleLog = console.log;
+
+    console.log = (...args) => {
+      logs.push(args.join(' '));
+      originalConsoleLog(...args);
+    };
+
+    try {
+      new Function(commentText || discussion.code)();
+    } catch (error) {
+      logs.push(`Error: ${error.message}`);
+    }
+
+    console.log = originalConsoleLog;
+    setOutput(logs);
+  };
+
+  const restButton = () => {
+    setCommentText("");
+  }
+
+  const handlePost = async () => {
+    if (commentText) {
+      await handleCommentSubmit(discussion._id, discussion.code);
+      setShowPostButton(false);      
+      showToast("Answer Posted Successfully! ", "success")
+    }else{
+      showToast("You Must Run Code BeforePosting!", "error")
+    }
+  };
 
   return (
-    <Card key={_id} sx={styles.card}>
+    <Card key={discussion._id} sx={styles.card}>
       <CardContent>
         <Box sx={styles.header}>
           <Box sx={styles.avatarSection}>
-            {user?.image ? (
-              <Avatar src={user.image} sx={styles.avatar} />
+            {discussion.user?.image ? (
+              <Avatar src={discussion.user.image} sx={styles.avatar} />
             ) : (
-              <DynamicAvatar firstLetter={user?.name?.charAt(0).toUpperCase() || "U"} />
+              <DynamicAvatar firstLetter={discussion.user?.name?.charAt(0).toUpperCase() || 'U'} />
             )}
             <Box>
-              <Typography variant="h6">{user?.name.toUpperCase() || "Anonymous User"}</Typography>
+              <Typography variant="h6">{discussion.user?.name.toUpperCase() || 'Anonymous User'}</Typography>
               <Typography variant="body2" color="textSecondary">
-                {timeAgo(createdAt)}
+                {timeAgo(discussion.createdAt)}
               </Typography>
             </Box>
           </Box>
-
           <Box>
-            {tags.length === 0 ? (
-              <Typography variant="body2" color="textSecondary">
-                Not Available
-              </Typography>
+            {discussion.tags.length === 0 ? (
+              <Typography variant="body2" color="textSecondary">Not Available</Typography>
             ) : (
-              tags.map((tag, index) => (
+              discussion.tags.map((tag, index) => (
                 <Chip key={index} label={`#${tag}`} color="primary" sx={styles.tags} />
               ))
             )}
           </Box>
         </Box>
 
-        <Typography variant="h5" sx={styles.title}>
-          {title}
-        </Typography>
+        <Typography variant="h5" sx={styles.title}>{discussion.title}</Typography>
+        <Typography variant="body1" sx={styles.description}>{discussion.description}</Typography>
 
-        <Typography variant="body1" sx={styles.description}>
-          {description}
-        </Typography>
-
+        <Box sx={styles.splitScreen}>
+          <Box sx={styles.codeEditor}>
+            <Box sx={styles.runButtonContainer}>
+              <IconButton onClick={runCode} sx={styles.runButton}>
+                <PlayArrow />
+              </IconButton>
+            </Box>
+            <Box sx={styles.restButtonContainer}>
+              <IconButton onClick={restButton} sx={styles.restButton}>
+                <RestartAlt />
+              </IconButton>
+            </Box>
+            <CodeMirror
+              value={commentText || discussion.code}
+              onChange={(value) => setCommentText(value)}
+              extensions={[javascript()]}
+              theme='dark'
+              height="150px"
+              style={{ borderRadius: '8px', border: '1px solid #ccc', fontSize: '14px' }}
+            />
+          </Box>
+          <Box sx={styles.outputPanel}>
+            <strong style={{ color: '#fff' }}>Output:</strong>
+            <pre style={{ color: '#fff' }}>{output.length > 0 ? output.join('\n') : 'No output'}</pre>
+          </Box>
+        </Box>
         <Divider />
       </CardContent>
-
       <CardActions sx={styles.actions}>
         <Button
           variant="outlined"
           size="small"
           sx={{
             ...styles.button,
-            ...(votes.upvotes.includes(currentUserId) ? styles.activeButton : {}),
+            ...(discussion.votes.upvotes.includes(currentUserId) ? styles.activeButton : {}),
           }}
-          onClick={() => handleVote(_id, "like")}
+          onClick={() => handleVote(discussion._id, 'like')}
         >
-          <ArrowUp /> {votes.upvotes.length || 0}
+          <ArrowUp /> {discussion.votes.upvotes.length || 0}
         </Button>
 
         <Button
@@ -70,37 +132,35 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
           color="error"
           sx={{
             ...styles.button,
-            ...(votes.downvotes.includes(currentUserId) ? styles.activeButton : {}),
-            backgroundColor: votes.downvotes.includes(currentUserId)
+            ...(discussion.votes.downvotes.includes(currentUserId) ? styles.activeButton : {}),
+            backgroundColor: discussion.votes.downvotes.includes(currentUserId)
               ? 'rgba(255, 0, 0, 0.1)'
               : 'inherit',
           }}
-          onClick={() => handleVote(_id, "dislike")}
+          onClick={() => handleVote(discussion._id, 'dislike')}
         >
-          <ArrowDown /> {votes.downvotes.length || 0}
+          <ArrowDown /> {discussion.votes.downvotes.length || 0}
         </Button>
+
+        <Comment id={discussion._id} flag={loading} />
+
+        {showPostButton &&
+          <Button variant="outlined" color="success" onClick={handlePost} disabled={loading}>
+            {loading ? 'Posting...' : 'Post'}
+          </Button>
+        }
+        
       </CardActions>
-
-
-      {errorMessages[_id] && (
+      {errorMessages[discussion._id] && (
         <Typography variant="body2" color="error" sx={styles.errorText}>
-          {errorMessages[_id]}
+          {errorMessages[discussion._id]}
         </Typography>
       )}
-
-      <CardContent sx={styles.commentSection}>
-        <Typography variant="h6" sx={{ marginBottom: '8px' }}>
-          Comments:
-        </Typography>
-        <AddComment id={_id} />
-      </CardContent>
     </Card>
   );
 };
 
 export default DiscussionCard;
-
-
 
 
 const styles = {
@@ -138,10 +198,10 @@ const styles = {
     color: 'text.primary',
   },
   actions: {
-    marginLeft: '16px',
     display: 'flex',
     gap: '12px',
     padding: '16px 0',
+    marginLeft: '20px'
   },
   button: {
     border: '1px solid',
@@ -153,6 +213,14 @@ const styles = {
     backgroundColor: 'rgba(0, 128, 0, 0.1)',
     borderColor: 'green',
   },
+  answerButton: {
+    border: '1px solid',
+    textTransform: 'none',
+    padding: '5px 12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
   errorText: {
     marginTop: '8px',
     textAlign: 'center',
@@ -160,4 +228,56 @@ const styles = {
   commentSection: {
     paddingTop: '8px',
   },
+  container: { marginTop: 2 },
+  error: { color: 'red', marginBottom: 1 },
+  splitScreen: {
+    display: "flex",
+    gap: "16px",
+    alignItems: "flex-start",
+    flexWrap: "nowrap",  // Prevent wrapping
+  },
+  codeEditor: {
+    position: "relative",
+    flex: "3", // Larger width for editor
+  },
+  runButtonContainer: {
+    position: "absolute",
+    top: "8px",
+    right: "8px",
+    zIndex: 10,
+  },
+  runButton: {
+    backgroundColor: "#1976d2",
+    color: "#fff",
+    "&:hover": { backgroundColor: "#125ea3" },
+  },
+  restButtonContainer: {
+    position: "absolute",
+    top: "8px",
+    right: "50px",
+    zIndex: 10,
+  },
+  restButton: {
+    backgroundColor: "#1976d2",
+    color: "#fff",
+    "&:hover": { backgroundColor: "#125ea3" },
+  },
+  outputPanel: {
+    flex: "1", // Smaller width for output
+    background: "#282C34",
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    height: "150px",
+    overflowY: "auto",
+    minWidth: "200px", // Adjust for a compact view
+  },
+  buttonContainer: {
+    display: 'flex',
+    gap: 1,
+    alignItems: 'center',
+    marginTop: "16px",
+  },
 };
+
+

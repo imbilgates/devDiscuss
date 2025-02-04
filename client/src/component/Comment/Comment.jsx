@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Button, Typography, Box, Avatar, Skeleton, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton } from '@mui/material';
+import { Card, CardContent, Button, Typography, Box, Avatar, Skeleton, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { TbTrashXFilled } from "react-icons/tb";
 import { BiMessageRoundedEdit } from "react-icons/bi";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
 
 import { getComments, deleteComment, editComment } from '../../service/Service';
 import { useAuth } from '../../contex/AuthContex';
-import CodeDisplay from './CodeDisplay';
+// import CodeDisplay from './CodeDisplay';
 import { showToast } from '../../utils/toastUtils'
 
 const Comment = ({ id, flag }) => {
     const [comments, setComments] = useState([]);
-    const [visibleCount, setVisibleCount] = useState(1);
+    const [visibleCount, setVisibleCount] = useState(2);
     const [loading, setLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [editingCommentId, setEditingCommentId] = useState(null); // To track the comment being edited
@@ -87,13 +90,13 @@ const Comment = ({ id, flag }) => {
         <div>
             {comments.length > 0 &&
                 <Button variant="contained" color="primary" onClick={handleOpenModal}>
-                    Comments ({comments.length})
+                    Answers ({comments.length})
                 </Button>
             }
 
             <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
                 <Box sx={{ backgroundColor: 'tan' }}>
-                    <DialogTitle>Comments</DialogTitle>
+                    <DialogTitle>Answers</DialogTitle>
                     <DialogContent >
                         {loading && (
                             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
@@ -134,18 +137,23 @@ const Comment = ({ id, flag }) => {
                                     ) : (
                                         <Typography variant="body1" component="p" sx={{ marginTop: 1 }}>
                                             {editingCommentId === comment._id ? (
-                                                <TextField
-                                                    fullWidth
+                                                <CodeMirror
                                                     value={editedCommentText}
-                                                    onChange={(e) => setEditedCommentText(e.target.value)}
-                                                    multiline
-                                                    variant="outlined"
-                                                    rows={3}
+                                                    onChange={(value) => setEditedCommentText(value)}
+                                                    extensions={[javascript()]}
+                                                    theme={vscodeDark}
+                                                    height="150px"
+                                                    style={{ borderRadius: "8px", border: "1px solid #ccc", fontSize: "14px" }}
                                                 />
                                             ) : (
-                                                <CodeDisplay code={comment.commentText} />
+                                                <CodeMirror
+                                                    value={comment.commentText}
+                                                    extensions={[javascript()]}
+                                                    theme={vscodeDark}
+                                                />
                                             )}
                                         </Typography>
+
                                     )}
 
                                     {/* Delete and Edit buttons */}

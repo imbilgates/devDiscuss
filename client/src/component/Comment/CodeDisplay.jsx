@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Typography } from '@mui/material';
 import Prism from "prismjs";
 import "prismjs/themes/prism-okaidia.css"; // Choose the theme
