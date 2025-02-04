@@ -1,9 +1,3 @@
-## DEPLOYED LINK
-Render: https://devdiscuss.onrender.com
-
-
-## Abstract
-
 ### Title
 DevDiscuss: A Collaborative Problem-Solving Platform
 
