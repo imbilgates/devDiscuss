@@ -3,11 +3,14 @@ import { createDiscussion } from '../../service/Service';
 import { useNavigate } from 'react-router-dom';
 import { predefinedTags } from '../../utils/PreTags';
 import { showToast } from "../../utils/toastUtils";
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
 
 const CreateDiscussion = () => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [code, setCode] = useState("");
 
   const navigate = useNavigate();
 
@@ -42,6 +45,7 @@ const CreateDiscussion = () => {
     const formData = {
       title: e.target.title.value,
       description: e.target.description.value,
+      code,
       tags,
     };
 
@@ -52,6 +56,7 @@ const CreateDiscussion = () => {
       e.target.description.value = "";
       setTags([]);
       setSearchInput("");
+      setCode("");
       navigate("/");
       showToast("Discussion Created Successfully!", "success")
     } catch (error) {
@@ -64,6 +69,17 @@ const CreateDiscussion = () => {
   return (
     <div className="container mt-5">
       <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+          <label className="form-label">Code</label>
+          <CodeMirror
+            value={code}
+            onChange={(value) => setCode(value)}
+            extensions={[javascript()]}
+            theme='dark'
+            height="150px"
+            style={{ borderRadius: '8px', border: '1px solid #ccc', fontSize: '14px' }}
+          />
+        </div>
         <div className="mb-3">
           <label className="form-label">Create your question here</label>
           <input
