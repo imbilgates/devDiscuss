@@ -114,8 +114,7 @@ const Comment = ({ id, flag }) => {
                             }}>
                                 <CardContent>
                                     <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}>
-                                        <Avatar sx={{ marginRight: 2 }}>
-                                            {comment.user.name.charAt(0).toUpperCase()}
+                                        <Avatar src={comment.user.image || "?"} sx={{ marginRight: 2 }}>
                                         </Avatar>
                                         <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                                             {comment.user.name}

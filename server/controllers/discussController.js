@@ -97,7 +97,7 @@ export const getDiscussionById = async (req, res) => {
         return res.status(400).json({ msg: "Invalid discussion ID" });
     }
     try {
-        const discussion = await discussionModel.findById(discussionId).populate("user", "name email");
+        const discussion = await discussionModel.findById(discussionId).populate("user", "name email image");
         if (!discussion) {
             return res.status(404).json({ msg: "Discussion not found" });
         }
@@ -115,7 +115,7 @@ export const getDiscussionByUser = async (req, res) => {
         const discussions = await discussionModel.find({ user: mongoose.Types.ObjectId(userId) })
             .populate("votes.upvotes", "name email image") // Populate name and email of upvoters
             .populate("votes.downvotes", "name email image") // Populate name and email of downvoters
-            .populate("user", "name email"); // Populate the owner of the discussion
+            .populate("user", "name email image"); // Populate the owner of the discussion
 
         if (!discussions || discussions.length === 0) {
             return res.status(404).json({ msg: "No discussions found for this user" });
@@ -244,7 +244,7 @@ export const getComments = async (req, res) => {
     }
 
     try {
-        const discussion = await discussionModel.findById(discussionId).populate("comments.user", "name email");
+        const discussion = await discussionModel.findById(discussionId).populate("comments.user", "name email image");
         if (!discussion) {
             return res.status(404).json({ msg: "Discussion not found" });
         }

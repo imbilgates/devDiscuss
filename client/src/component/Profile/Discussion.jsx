@@ -3,13 +3,16 @@ import { Typography, Box } from '@mui/material';
 import { getDiscussionByUser, updateDiscussion, deleteDiscussion } from '../../service/Service';
 import DiscussionsTable from './DiscussionsTable';
 import VotersModal from './VotersModal';
+import EditDiscussionModal from './EditDiscussionModal';
 import { showToast } from '../../utils/toastUtils';
 
+import { predefinedTags } from '../../utils/PreTags'
 const Discussion = () => {
   const [discussions, setDiscussions] = useState([]);
   const [tags, setTags] = useState(new Set());
   const [error, setError] = useState(null);
   const [editDiscussion, setEditDiscussion] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [votersModal, setVotersModal] = useState({ open: false, upvotes: [], downvotes: [] });
 
   useEffect(() => {
@@ -17,21 +20,12 @@ const Discussion = () => {
       try {
         const response = await getDiscussionByUser();
         setDiscussions(response.data);
-
-        // Create a new set for unique tags
+        // Extract unique tags
         const uniqueTags = new Set();
         response.data.forEach(item => {
-          item.tags.forEach(tag => {
-            uniqueTags.add(tag);
-          });
+          item.tags.forEach(tag => uniqueTags.add(tag));
         });
-
-        // Update the state with unique tags
-        setTags(uniqueTags);
-
-        // Log the unique tags here instead of directly logging `tags`
-        console.log("Unique tags:", Array.from(uniqueTags));
-
+        setTags([...predefinedTags, uniqueTags]);
       } catch (err) {
         setError(err.response?.data?.msg || 'Error fetching discussions');
       }
@@ -40,19 +34,27 @@ const Discussion = () => {
     fetchDiscussions();
   }, []);
 
-  const handleEdit = (discussion) => setEditDiscussion(discussion);
+  const handleEdit = (discussion) => {
+    setEditDiscussion(discussion);
+    setEditModalOpen(true);
+  };
 
-  const handleSave = async (id) => {
+  const handleCloseEditModal = () => {
+    setEditDiscussion(null);
+    setEditModalOpen(false);
+  };
+
+  const handleSave = async () => {
     try {
-      await updateDiscussion(id, editDiscussion);
+      await updateDiscussion(editDiscussion._id, editDiscussion);
       setDiscussions(discussions.map(discussion =>
-        discussion._id === id ? { ...discussion, ...editDiscussion } : discussion
+        discussion._id === editDiscussion._id ? { ...discussion, ...editDiscussion } : discussion
       ));
-      setEditDiscussion(null);
-      showToast('Edited Successfully!', 'success')
+      showToast('Edited Successfully!', 'success');
+      handleCloseEditModal();
     } catch (err) {
       setError('Error saving discussion', err);
-      showToast('Error saving discussion', "error");
+      showToast('Error saving discussion', 'error');
     }
   };
 
@@ -60,10 +62,10 @@ const Discussion = () => {
     try {
       await deleteDiscussion(id);
       setDiscussions(discussions.filter(discussion => discussion._id !== id));
-      showToast("Deleted Successfully!", "delete");
+      showToast("Deleted Successfully!", "success");
     } catch (err) {
       setError('Error deleting discussion', err);
-      showToast('Error deleting discussion', "error");
+      showToast('Error deleting discussion', 'error');
     }
   };
 
@@ -71,23 +73,28 @@ const Discussion = () => {
 
   const handleCloseVotersModal = () => setVotersModal({ open: false, upvotes: [], downvotes: [] });
 
-
-  if (error) return <Typography color="error">Error: {error}</Typography>;
-
-  if (discussions.length === 0) return <Typography>No discussions found for this user.</Typography>;
-
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
         Number of Discussions ({discussions.length})
       </Typography>
-      <DiscussionsTable
-        discussions={discussions}
-        editDiscussion={editDiscussion}
-        onEdit={handleEdit}
+      {error && <Typography color="error">Error: {error}</Typography>}
+      {discussions.length === 0 ? (
+        <Typography>No discussions found for this user.</Typography>
+      ) : (
+        <DiscussionsTable
+          discussions={discussions}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onOpenVotersModal={handleOpenVotersModal}
+        />
+      )}
+      <EditDiscussionModal
+        open={editModalOpen}
+        onClose={handleCloseEditModal}
+        discussion={editDiscussion}
+        setDiscussion={setEditDiscussion}
         onSave={handleSave}
-        onDelete={handleDelete}
-        onOpenVotersModal={handleOpenVotersModal}
         tags={tags}
       />
       <VotersModal

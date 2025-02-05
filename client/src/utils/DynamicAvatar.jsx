@@ -49,7 +49,7 @@ const DynamicAvatar = ({ text, ...props }) => {
 
   return (
     <>
-      {text?.image ? (
+      {text.image ? (
         <Avatar src={text.image} sx={stylesProfile.avatar} />
       ) : (
         <Avatar sx={{ ...styles.avatar, backgroundColor }} {...props}>

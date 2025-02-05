@@ -93,24 +93,33 @@ const EditProfile = ({ user, setIsEditing }) => {
                     </IconButton>
                 </Box>
 
-                <Box
-                    sx={styles.dropArea(dragOver)}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    component="label" // Make the drop area clickable
-                >
-                    <Typography color="text.secondary">
-                        Drag and drop an image here, or click to upload.
-                    </Typography>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handleImageChange}
-                    />
-                    {image && <Avatar sx={styles.avatar} src={image} />}
-                </Box>
+                {/* Show image preview if an image is selected */}
+                {image ? (
+                    <Box sx={styles.imagePreviewContainer}>
+                        <Avatar sx={styles.previewImage} src={image} />
+                        <IconButton sx={styles.closeImageButton} onClick={() => setImage(null)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                ) : (
+                    <Box
+                        sx={styles.dropArea(dragOver)}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        component="label" // Make the drop area clickable
+                    >
+                        <Typography color="text.secondary">
+                            Drag and drop an image here, or click to upload.
+                        </Typography>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            onChange={handleImageChange}
+                        />
+                    </Box>
+                )}
 
                 <TextField
                     label="Name"
@@ -135,6 +144,7 @@ const EditProfile = ({ user, setIsEditing }) => {
 };
 
 export default EditProfile;
+
 
 const styles = {
     formContainer: {
@@ -163,12 +173,26 @@ const styles = {
         backgroundColor: dragOver ? "#f9f9ff" : "transparent",
         transition: "background-color 0.3s",
     }),
-    avatar: {
-        width: 80,
-        height: 80,
-        mt: 2,
+    imagePreviewContainer: {
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        mb: 2,
+    },
+    previewImage: {
+        width: 150,
+        height: 150,
+        borderRadius: "50%",
         border: "2px solid #3f51b5",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    },
+    closeImageButton: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        backgroundColor: "rgba(255, 0, 0, 0.7)",
+        "&:hover": { backgroundColor: "rgba(0, 255, 85, 0.9)" },
+        marginRight: "210px"
     },
     textField: {
         "& .MuiInputLabel-root": { fontWeight: 500 },
