@@ -1,5 +1,7 @@
 import discussionModel from '../models/discussModel.js';
+import userModel from "../models/userModel.js";
 import mongoose from 'mongoose';
+import { sendEmail } from '../utils/emailService.js';
 
 // DISCUSSION
 export const createDiscussion = async (req, res) => {
@@ -211,7 +213,7 @@ export const addComments = async (req, res) => {
     const userId = req.user.id;
 
     if (!commentText) {
-        return res.status(400).json({ msg: "comments text is required!" });
+        return res.status(400).json({ msg: "Comment text is required!" });
     }
 
     if (!mongoose.Types.ObjectId.isValid(discussionId)) {
@@ -223,18 +225,31 @@ export const addComments = async (req, res) => {
         if (!discussion) {
             return res.status(404).json({ msg: "Discussion not found" });
         }
-        const newComment = {
-            user: userId,
-            commentText,
-        }
+
+        const newComment = { user: userId, commentText };
         discussion.comments.push(newComment);
         await discussion.save();
+
+        // Fetch discussion owner and commenter details
+        const discussionOwner = await userModel.findById(discussion.user);
+        const commenter = await userModel.findById(userId);
+
+        if (discussionOwner && discussionOwner.email) {
+            await sendEmail(
+                discussionOwner.email,
+                "New Comment on Your Discussion",
+                commenter.name,  // Pass the commenter's name
+                commentText      // Pass the comment text
+            );
+        }
+
         res.json(discussion);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-}
+};
+
 
 export const getComments = async (req, res) => {
     const discussionId = req.params.id;
