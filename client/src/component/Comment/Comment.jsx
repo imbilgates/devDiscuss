@@ -89,7 +89,7 @@ const Comment = ({ id, flag }) => {
     return (
         <div>
             {comments.length > 0 &&
-                <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                <Button variant="outlined" color="primary" onClick={handleOpenModal}>
                     Answers ({comments.length})
                 </Button>
             }

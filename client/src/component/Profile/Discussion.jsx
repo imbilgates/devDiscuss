@@ -5,8 +5,10 @@ import DiscussionsTable from './DiscussionsTable';
 import VotersModal from './VotersModal';
 import EditDiscussionModal from './EditDiscussionModal';
 import { showToast } from '../../utils/toastUtils';
+import { Link } from 'react-router-dom'
 
 import { predefinedTags } from '../../utils/PreTags'
+
 const Discussion = () => {
   const [discussions, setDiscussions] = useState([]);
   const [tags, setTags] = useState(new Set());
@@ -25,7 +27,7 @@ const Discussion = () => {
         response.data.forEach(item => {
           item.tags.forEach(tag => uniqueTags.add(tag));
         });
-        setTags([...predefinedTags, uniqueTags]);
+        setTags([...predefinedTags]);
       } catch (err) {
         setError(err.response?.data?.msg || 'Error fetching discussions');
       }
@@ -80,7 +82,7 @@ const Discussion = () => {
       </Typography>
       {error && <Typography color="error">Error: {error}</Typography>}
       {discussions.length === 0 ? (
-        <Typography>No discussions found for this user.</Typography>
+        <Typography>Post Here <Link to='/create'>Create Discussion</Link></Typography>
       ) : (
         <DiscussionsTable
           discussions={discussions}

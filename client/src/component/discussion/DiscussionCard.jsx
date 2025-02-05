@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider, IconButton } from '@mui/material';
-import { ArrowUp, ArrowDown } from 'lucide-react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { PlayArrow, RestartAlt } from '@mui/icons-material';
+import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
+import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
 
 import DynamicAvatar from '../../utils/DynamicAvatar';
 import { timeAgo } from '../../utils/timeAgo';
@@ -50,7 +51,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
       setShowPostButton(false);      
       showToast("Answer Posted Successfully! ", "success")
     }else{
-      showToast("You Must Run Code BeforePosting!", "error")
+      showToast("You Must Change Something!", "error")
     }
   };
 
@@ -85,6 +86,36 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
         <Typography variant="h5" sx={styles.title}>{discussion.title}</Typography>
         <Typography variant="body1" sx={styles.description}>{discussion.description}</Typography>
 
+        <CardActions sx={{ marginRight: "20px" }}>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{
+            ...styles.button,
+            ...(discussion.votes.upvotes.includes(currentUserId) ? styles.activeButton : {}),
+          }}
+          onClick={() => handleVote(discussion._id, 'like')}
+        >
+          <ThumbUpAltTwoToneIcon /> {discussion.votes.upvotes.length || 0}
+        </Button>
+
+        <Button
+          variant="outlined"
+          size="small"
+          color="error"
+          sx={{
+            ...styles.button,
+            ...(discussion.votes.downvotes.includes(currentUserId) ? styles.activeButton : {}),
+            backgroundColor: discussion.votes.downvotes.includes(currentUserId)
+              ? 'rgba(255, 0, 0, 0.36)'
+              : 'inherit',
+          }}
+          onClick={() => handleVote(discussion._id, 'dislike')}
+        >
+          <ThumbDownOffAltTwoToneIcon /> {discussion.votes.downvotes.length || 0}
+        </Button>
+        </CardActions>
+
         <Box sx={styles.splitScreen}>
           <Box sx={styles.codeEditor}>
             <Box sx={styles.runButtonContainer}>
@@ -114,35 +145,9 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
         <Divider />
       </CardContent>
       <CardActions sx={styles.actions}>
-        <Button
-          variant="outlined"
-          size="small"
-          sx={{
-            ...styles.button,
-            ...(discussion.votes.upvotes.includes(currentUserId) ? styles.activeButton : {}),
-          }}
-          onClick={() => handleVote(discussion._id, 'like')}
-        >
-          <ArrowUp /> {discussion.votes.upvotes.length || 0}
-        </Button>
-
-        <Button
-          variant="outlined"
-          size="small"
-          color="error"
-          sx={{
-            ...styles.button,
-            ...(discussion.votes.downvotes.includes(currentUserId) ? styles.activeButton : {}),
-            backgroundColor: discussion.votes.downvotes.includes(currentUserId)
-              ? 'rgba(255, 0, 0, 0.1)'
-              : 'inherit',
-          }}
-          onClick={() => handleVote(discussion._id, 'dislike')}
-        >
-          <ArrowDown /> {discussion.votes.downvotes.length || 0}
-        </Button>
 
         <Comment id={discussion._id} flag={loading} />
+
 
         {showPostButton &&
           <Button variant="outlined" color="success" onClick={handlePost} disabled={loading}>
@@ -150,6 +155,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
           </Button>
         }
         
+
       </CardActions>
       {errorMessages[discussion._id] && (
         <Typography variant="body2" color="error" sx={styles.errorText}>
@@ -243,7 +249,7 @@ const styles = {
   runButtonContainer: {
     position: "absolute",
     top: "8px",
-    right: "8px",
+    right: "3px",
     zIndex: 10,
   },
   runButton: {
