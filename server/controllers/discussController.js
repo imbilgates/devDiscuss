@@ -239,10 +239,11 @@ export const addComments = async (req, res) => {
                 discussionOwner.email,
                 "New Comment on Your Discussion",
                 commenter.name,  // Pass the commenter's name
+                commenter.image,  // Pass the commenter's name
                 commentText      // Pass the comment text
             );
         }
-
+        
         res.json(discussion);
     } catch (err) {
         console.error(err.message);

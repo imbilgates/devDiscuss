@@ -3,53 +3,89 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>devDiscuss</title>
+    <title>dev-Discuss</title>
     <style>
-      /* Add your styles here */
       body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
-        color: #333;
+        margin: 0;
+        padding: 20px;
       }
       .container {
-        width: 100%;
         max-width: 600px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 20px;
+        margin: auto;
+        background: #ffffff;
         border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
       .header {
+        background: #007bff;
+        color: #ffffff;
         text-align: center;
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 5px;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
       }
       .content {
         padding: 20px;
       }
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .profile-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #007bff;
+      }
+      .comment-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-left: 4px solid #007bff;
+        margin-top: 10px;
+        font-style: italic;
+        border-radius: 5px;
+      }
+      .visit-button {
+        display: block;
+        text-align: center;
+        background: #007bff;
+        color: #ffffff;
+        padding: 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+      .visit-button:hover {
+        background: #0056b3;
+      }
       .footer {
         text-align: center;
+        padding: 15px;
         font-size: 12px;
-        color: #aaa;
-        padding: 10px;
-        border-top: 1px solid #ddd;
+        color: #777;
+        background: #f8f9fa;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="header">
-        <h2>New Comment on Your Discussion</h2>
-      </div>
+      <div class="header">New Comment on Your Discussion</div>
       <div class="content">
-        <p><strong>{{ commenterName }}</strong> commented on your discussion: </p>
-        <p><em>"{{ commentText }}"</em></p>
+        <div class="profile">
+          <img src="{{ commentImage }}" alt="Profile Picture" class="profile-img" />
+          <strong>{{ commenterName }}</strong> commented:
+        </div>
+        <div class="comment-box">
+          <p>"{{ commentText }}"</p>
+        </div>
+        <a href="https://devdiscuss.onrender.com" class="visit-button">Visit Your Page</a>
       </div>
       <div class="footer">
-        <p>If you don't want to receive emails like this, you can change your email preferences.</p>
+        <p>If you don't want to receive these emails, update your preferences.</p>
       </div>
     </div>
   </body>

@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = async (to, subject, commenterName, commentText) => {
+export const sendEmail = async (to, subject, commenterName, commentImage, commentText) => {
 
   // RESOLVING Dirname for ES module
   const __filename = fileURLToPath(import.meta.url);
@@ -34,7 +34,8 @@ export const sendEmail = async (to, subject, commenterName, commentText) => {
   // Replace placeholders with actual data
   emailHtml = emailHtml
     .replace("{{ commenterName }}", commenterName)
-    .replace("{{ commentText }}", commentText);
+    .replace("{{ commentText }}", commentText)
+    .replace("{{ commentImage }}", commentImage);
 
   const mailOptions = {
     from: process.env.EMAIL,
