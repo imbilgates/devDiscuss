@@ -28,6 +28,7 @@ const Register = ({ setError, setMessage, setIsLogin }) => {
     return (
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
             <Grid container spacing={2}>
+                <p><strong className="text-red">*</strong>please provide your google email if you want to get mail notification<strong className="text-red">*</strong></p>
                 <Grid item xs={6}>
                     <TextField
                         label="Name"
@@ -68,7 +69,7 @@ const Register = ({ setError, setMessage, setIsLogin }) => {
             </Button>
         </Box>
     );
-    
+
 };
 
 export default Register;
