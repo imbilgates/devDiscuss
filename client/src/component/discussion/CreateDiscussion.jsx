@@ -5,33 +5,31 @@ import { predefinedTags } from '../../utils/PreTags';
 import { showToast } from "../../utils/toastUtils";
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { TextField, Button, Chip, CircularProgress, Box, Typography, Grid, Autocomplete } from '@mui/material';
 
 const CreateDiscussion = () => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
   const [code, setCode] = useState("");
-
+  
   const navigate = useNavigate();
 
-  const handleTagAdd = (tag) => {
-    if (tag === "") return;
-
-    if (!predefinedTags.includes(tag)) {
-      showToast("You can only add predefined tags.", "error")
+  const handleTagAdd = (event, newValue) => {
+    if (!newValue || newValue === "") return;
+    
+    if (!predefinedTags.includes(newValue)) {
+      showToast("You can only add predefined tags.", "error");
       return;
     }
 
     if (tags.length >= 3) {
-      showToast("You cannot add more than 3 tags.", "error")
+      showToast("You cannot add more than 3 tags.", "error");
       return;
     }
 
-    if (!tags.includes(tag)) {
-      setTags([...tags, tag]);
+    if (!tags.includes(newValue)) {
+      setTags([...tags, newValue]);
     }
-
-    setSearchInput("");
   };
 
   const handleTagRemove = (tagToRemove) => {
@@ -55,10 +53,9 @@ const CreateDiscussion = () => {
       e.target.title.value = "";
       e.target.description.value = "";
       setTags([]);
-      setSearchInput("");
       setCode("");
       navigate("/");
-      showToast("Discussion Created Successfully!", "success")
+      showToast("Discussion Created Successfully!", "success");
     } catch (error) {
       setLoading(false);
       console.error("Error creating discussion:", error);
@@ -67,105 +64,54 @@ const CreateDiscussion = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <Box sx={styles.container}>
       <form onSubmit={handleSubmit}>
-      <div className="mb-3">
-          <label className="form-label">Code</label>
-          <CodeMirror
-            value={code}
-            onChange={(value) => setCode(value)}
-            extensions={[javascript()]}
-            theme='dark'
-            height="150px"
-            style={{ borderRadius: '8px', border: '1px solid #ccc', fontSize: '14px' }}
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Create your question here</label>
-          <input
-            type="text"
-            className="form-control"
-            name="title"
-            placeholder="Enter the question"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Description</label>
-          <input
-            type="text"
-            className="form-control"
-            name="description"
-            placeholder="Enter the description"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Tags</label>
-          <div className="d-flex align-items-center">
-            <input
-              type="text"
-              className="form-control w-25"
-              placeholder="Search tags"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+        <Typography variant="h5" sx={styles.heading}>Create Discussion</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField label="Title" name="title" fullWidth required sx={styles.input} />
+          </Grid>
+          <Grid item xs={6}>
+            <Autocomplete
+              options={predefinedTags.filter(tag => !tags.includes(tag))}
+              onChange={handleTagAdd}
+              renderInput={(params) => <TextField {...params} label="Tags" sx={styles.inputSmall} />}
             />
-            <button
-              type="button"
-              className="btn btn-secondary ms-2"
-              onClick={() => handleTagAdd(searchInput)}
-            >
-              Add
-            </button>
-          </div>
-          <div className="mt-2">
-            {predefinedTags
-              .filter(
-                (tag) =>
-                  tag.toLowerCase().includes(searchInput.toLowerCase()) &&
-                  !tags.includes(tag)
-              )
-              .map((tag, index) => (
-                <button
-                  type="button"
-                  key={index}
-                  className="btn btn-outline-info btn-sm me-2 mt-2"
-                  onClick={() => handleTagAdd(tag)}
-                >
-                  {tag}
-                </button>
-              ))}
-          </div>
-          <div className="mt-3">
-            {tags.map((tag, index) => (
-              <span
-                key={index}
-                className="badge bg-info text-dark me-2"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleTagRemove(tag)}
-              >
-                {tag} &times;
-              </span>
-            ))}
-          </div>
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? (
-            <>
-              Loading...
-              <span
-                className="spinner-border spinner-grow-sm"
-                role="status"
-                aria-hidden="true"
-              ></span>
-            </>
-          ) : (
-            "Submit"
-          )}
-        </button>
+          </Grid>
+        </Grid>
+        <TextField label="Description" name="description" fullWidth required multiline rows={3} sx={styles.input} />
+        <Typography sx={styles.label}>Code (optional)</Typography>
+        <CodeMirror
+          value={code}
+          onChange={(value) => setCode(value)}
+          extensions={[javascript()]}
+          theme='dark'
+          height="150px"
+          style={styles.codeMirror}
+        />
+        <Box sx={styles.selectedTags}>
+          {tags.map((tag, index) => (
+            <Chip key={index} label={tag} onDelete={() => handleTagRemove(tag)} sx={styles.chip} />
+          ))}
+        </Box>
+        <Button type="submit" variant="contained" color="primary" disabled={loading} sx={styles.submitButton}>
+          {loading ? <CircularProgress size={20} /> : "Submit"}
+        </Button>
       </form>
-    </div>
+    </Box>
   );
+};
+
+const styles = {
+  container: { maxWidth: 600, margin: "auto", padding: 3 },
+  heading: { marginBottom: 2 },
+  input: { marginBottom: 2 },
+  inputSmall: { marginBottom: 2, width: '100%' },
+  label: { marginTop: 2, marginBottom: 1, fontWeight: 'bold' },
+  codeMirror: { borderRadius: '8px', border: '1px solid #ccc', fontSize: '14px' },
+  selectedTags: { marginTop: 2, display: 'flex', flexWrap: 'wrap', gap: 1 },
+  chip: { cursor: 'pointer', height: '30px' },
+  submitButton: { marginTop: 2, width: '100%', height: '40px' }
 };
 
 export default CreateDiscussion;
