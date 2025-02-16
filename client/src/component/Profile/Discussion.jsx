@@ -5,7 +5,6 @@ import DiscussionsTable from './DiscussionsTable';
 import VotersModal from './VotersModal';
 import EditDiscussionModal from './EditDiscussionModal';
 import { showToast } from '../../utils/toastUtils';
-import { Link } from 'react-router-dom'
 
 import { predefinedTags } from '../../utils/PreTags'
 
@@ -82,7 +81,7 @@ const Discussion = () => {
       </Typography>
       {error && <Typography color="error">Error: {error}</Typography>}
       {discussions.length === 0 ? (
-        <Typography>Post Here <Link to='/create'>Create Discussion</Link></Typography>
+       "Loading..."
       ) : (
         <DiscussionsTable
           discussions={discussions}

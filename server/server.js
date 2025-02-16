@@ -31,7 +31,7 @@ app.use("/api/discussion", discussRoute)
 
 // use the client app
 app.use(express.static(path.join(__dirname, '../client', 'dist')));
-app.get('*', (req, res) => {
+app.get('*', (_, res) => {
     res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'));
 });
 
