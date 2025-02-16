@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider, IconButton, Select, MenuItem } from '@mui/material';
 import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
-import { python } from '@codemirror/lang-python';
-import { java } from '@codemirror/lang-java';
-import { cpp } from '@codemirror/lang-cpp';
 import { PlayArrow, RestartAlt } from '@mui/icons-material';
 import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
 import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
@@ -15,13 +11,8 @@ import useAddComment from '../../hooks/useAddComment';
 import Comment from '../Comment/Comment';
 import { showToast } from '../../utils/toastUtils';
 import { runCode as apiRunCode } from '../../utils/Api';
+import { languageExtensions } from '../../utils/Language'
 
-const languageExtensions = {
-  javascript: javascript(),
-  python: python(),
-  java: java(),
-  cpp: cpp(),
-};
 
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {
   const [output, setOutput] = useState([]);
@@ -182,7 +173,6 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
 export default DiscussionCard;
 
 
-
 const styles = {
   card: {
     margin: '16px 0',
@@ -271,16 +261,14 @@ const styles = {
     color: "#fff",
     "&:hover": { backgroundColor: "#125ea3" },
   },
-  restButtonContainer: {
+  resetButtonContainer: {
     position: "absolute",
     top: "8px",
     right: "50px",
     zIndex: 10,
   },
-  restButton: {
-    backgroundColor: "#1976d2",
-    color: "#fff",
-    "&:hover": { backgroundColor: "#125ea3" },
+  resetButton: {
+    color: "#fff"
   },
   outputPanel: {
     flex: "1", // Smaller width for output
