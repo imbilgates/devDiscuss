@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-cpp": "github:codemirror/lang-cpp",
+    "@codemirror/lang-java": "github:codemirror/lang-java",
+    "@codemirror/lang-javascript": "github:codemirror/lang-javascript",
+    "@codemirror/lang-python": "github:codemirror/lang-python",
     "@codemirror/language": "^6.10.8",
     "@codemirror/state": "^6.5.1",
     "@codemirror/view": "^6.36.2",

@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider, IconButton } from '@mui/material';
+import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider, IconButton, Select, MenuItem } from '@mui/material';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { python } from '@codemirror/lang-python';
+import { java } from '@codemirror/lang-java';
+import { cpp } from '@codemirror/lang-cpp';
 import { PlayArrow, RestartAlt } from '@mui/icons-material';
 import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
 import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
@@ -11,47 +14,43 @@ import { timeAgo } from '../../utils/timeAgo';
 import useAddComment from '../../hooks/useAddComment';
 import Comment from '../Comment/Comment';
 import { showToast } from '../../utils/toastUtils';
+import { runCode as apiRunCode } from '../../utils/Api';
+
+const languageExtensions = {
+  javascript: javascript(),
+  python: python(),
+  java: java(),
+  cpp: cpp(),
+};
 
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {
   const [output, setOutput] = useState([]);
   const [showPostButton, setShowPostButton] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
 
   const { handleCommentSubmit, loading, setCommentText, commentText } = useAddComment();
 
   useEffect(() => {
-    setShowPostButton(output !== "");
+    setShowPostButton(output.length > 0);
   }, [discussion.code, output]);
 
-  const runCode = () => {
-    let logs = [];
-    const originalConsoleLog = console.log;
-
-    console.log = (...args) => {
-      logs.push(args.join(' '));
-      originalConsoleLog(...args);
-    };
-
-    try {
-      new Function(commentText || discussion.code)();
-    } catch (error) {
-      logs.push(`Error: ${error.message}`);
-    }
-
-    console.log = originalConsoleLog;
-    setOutput(logs);
+  const runCode = async () => {
+    const response = await apiRunCode(selectedLanguage, commentText || discussion.code);
+    setOutput(response.stdout ? response.stdout.split("\n") : [response.stderr || "Error executing code"]);
   };
 
-  const restButton = () => {
+  const resetCode = () => {
     setCommentText("");
-  }
+    setOutput([]);
+  };
 
   const handlePost = async () => {
     if (commentText) {
       await handleCommentSubmit(discussion._id, discussion.code);
-      setShowPostButton(false);      
-      showToast("Answer Posted Successfully! ", "success")
-    }else{
-      showToast("You Must Change Something!", "error")
+      setShowPostButton(false);
+      showToast("Answer Posted Successfully!", "success");
+    } else {
+      showToast("You Must Change Something!", "error");
     }
   };
 
@@ -87,51 +86,68 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
         <Typography variant="body1" sx={styles.description}>{discussion.description}</Typography>
 
         <CardActions sx={{ marginRight: "20px" }}>
-        <Button
-          variant="outlined"
-          size="small"
-          sx={{
-            ...styles.button,
-            ...(discussion.votes.upvotes.includes(currentUserId) ? styles.activeButton : {}),
-          }}
-          onClick={() => handleVote(discussion._id, 'like')}
-        >
-          <ThumbUpAltTwoToneIcon /> {discussion.votes.upvotes.length || 0}
-        </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{
+              ...styles.button,
+              ...(discussion.votes.upvotes.includes(currentUserId) ? styles.activeButton : {}),
+            }}
+            onClick={() => handleVote(discussion._id, 'like')}
+          >
+            <ThumbUpAltTwoToneIcon /> {discussion.votes.upvotes.length || 0}
+          </Button>
 
-        <Button
-          variant="outlined"
-          size="small"
-          color="error"
-          sx={{
-            ...styles.button,
-            ...(discussion.votes.downvotes.includes(currentUserId) ? styles.activeButton : {}),
-            backgroundColor: discussion.votes.downvotes.includes(currentUserId)
-              ? 'rgba(255, 0, 0, 0.36)'
-              : 'inherit',
-          }}
-          onClick={() => handleVote(discussion._id, 'dislike')}
-        >
-          <ThumbDownOffAltTwoToneIcon /> {discussion.votes.downvotes.length || 0}
-        </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            color="error"
+            sx={{
+              ...styles.button,
+              ...(discussion.votes.downvotes.includes(currentUserId) ? styles.activeButton : {}),
+              backgroundColor: discussion.votes.downvotes.includes(currentUserId)
+                ? 'rgba(255, 0, 0, 0.36)'
+                : 'inherit',
+            }}
+            onClick={() => handleVote(discussion._id, 'dislike')}
+          >
+            <ThumbDownOffAltTwoToneIcon /> {discussion.votes.downvotes.length || 0}
+          </Button>
+
+          
+        <Box sx={styles.dropdownContainer}>
+          <Select
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+            sx={styles.dropdown}
+            size="small"
+          >
+            {Object.keys(languageExtensions).map((lang) => (
+              <MenuItem key={lang} value={lang}>
+                {lang.toUpperCase()}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+        
         </CardActions>
 
         <Box sx={styles.splitScreen}>
           <Box sx={styles.codeEditor}>
+
             <Box sx={styles.runButtonContainer}>
               <IconButton onClick={runCode} sx={styles.runButton}>
                 <PlayArrow />
               </IconButton>
-            </Box>
-            <Box sx={styles.restButtonContainer}>
-              <IconButton onClick={restButton} sx={styles.restButton}>
+              <IconButton onClick={resetCode} sx={styles.resetButton}>
                 <RestartAlt />
               </IconButton>
             </Box>
+
             <CodeMirror
               value={commentText || discussion.code}
               onChange={(value) => setCommentText(value)}
-              extensions={[javascript()]}
+              extensions={[languageExtensions[selectedLanguage]]}
               theme='dark'
               height="150px"
               style={{ borderRadius: '8px', border: '1px solid #ccc', fontSize: '14px' }}
@@ -143,19 +159,16 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
           </Box>
         </Box>
         <Divider />
+
+
       </CardContent>
       <CardActions sx={styles.actions}>
-
         <Comment id={discussion._id} flag={loading} />
-
-
-        {showPostButton &&
+        {showPostButton && (
           <Button variant="outlined" color="success" onClick={handlePost} disabled={loading}>
             {loading ? 'Posting...' : 'Post'}
           </Button>
-        }
-        
-
+        )}
       </CardActions>
       {errorMessages[discussion._id] && (
         <Typography variant="body2" color="error" sx={styles.errorText}>
@@ -167,6 +180,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
 };
 
 export default DiscussionCard;
+
 
 
 const styles = {
