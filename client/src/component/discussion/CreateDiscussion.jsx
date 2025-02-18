@@ -5,18 +5,21 @@ import { predefinedTags } from '../../utils/PreTags';
 import { showToast } from "../../utils/toastUtils";
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
-import { TextField, Button, Chip, CircularProgress, Box, Typography, Grid, Autocomplete } from '@mui/material';
+import { TextField, Button, Chip, CircularProgress, Box, Typography, Autocomplete, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { languageExtensions } from '../../utils/Language'
+
 
 const CreateDiscussion = () => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const [code, setCode] = useState("");
-  
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+
   const navigate = useNavigate();
 
   const handleTagAdd = (event, newValue) => {
     if (!newValue || newValue === "") return;
-    
+
     if (!predefinedTags.includes(newValue)) {
       showToast("You can only add predefined tags.", "error");
       return;
@@ -54,6 +57,7 @@ const CreateDiscussion = () => {
       e.target.description.value = "";
       setTags([]);
       setCode("");
+      setSelectedLanguage("");  // Reset language on submission
       navigate("/");
       showToast("Discussion Created Successfully!", "success");
     } catch (error) {
@@ -65,53 +69,135 @@ const CreateDiscussion = () => {
 
   return (
     <Box sx={styles.container}>
-      <form onSubmit={handleSubmit}>
-        <Typography variant="h5" sx={styles.heading}>Create Discussion</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField label="Title" name="title" fullWidth required sx={styles.input} />
-          </Grid>
-          <Grid item xs={6}>
-            <Autocomplete
-              options={predefinedTags.filter(tag => !tags.includes(tag))}
-              onChange={handleTagAdd}
-              renderInput={(params) => <TextField {...params} label="Tags" sx={styles.inputSmall} />}
-            />
-          </Grid>
-        </Grid>
-        <TextField label="Description" name="description" fullWidth required multiline rows={3} sx={styles.input} />
-        <Typography sx={styles.label}>Code (optional)</Typography>
-        <CodeMirror
-          value={code}
-          onChange={(value) => setCode(value)}
-          extensions={[javascript()]}
-          theme='dark'
-          height="150px"
-          style={styles.codeMirror}
-        />
-        <Box sx={styles.selectedTags}>
-          {tags.map((tag, index) => (
-            <Chip key={index} label={tag} onDelete={() => handleTagRemove(tag)} sx={styles.chip} />
-          ))}
+      <form onSubmit={handleSubmit} style={styles.form}>
+        {/* Left Side: Input Fields */}
+        <Box sx={styles.leftPanel}>
+          <Typography variant="h5" sx={styles.heading}>Create Discussion</Typography>
+          <TextField label="Title" name="title" fullWidth required sx={styles.input} />
+          <TextField label="Description" name="description" fullWidth required multiline rows={3} sx={styles.input} />
+
+          <Autocomplete
+            options={predefinedTags.filter(tag => !tags.includes(tag))}
+            onChange={handleTagAdd}
+            renderInput={(params) => <TextField {...params} label="Tags" sx={styles.input} />}
+          />
+
+          {/* Selected Tags */}
+          <Box sx={styles.selectedTags}>
+            {tags.map((tag, index) => (
+              <Chip key={index} label={tag} onDelete={() => handleTagRemove(tag)} sx={styles.chip} />
+            ))}
+          </Box>
+
+          <Button type="submit" variant="contained" color="primary" disabled={loading} sx={styles.submitButton}>
+            {loading ? <CircularProgress size={20} /> : "Submit"}
+          </Button>
         </Box>
-        <Button type="submit" variant="contained" color="primary" disabled={loading} sx={styles.submitButton}>
-          {loading ? <CircularProgress size={20} /> : "Submit"}
-        </Button>
+
+        {/* Right Side: Code Editor (Shown Only If Language Is Selected) */}
+        <Box sx={styles.rightPanel}>
+          <FormControl fullWidth sx={styles.languageSelect}>
+            <InputLabel>Language</InputLabel>
+            <Select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+            >
+              {Object.keys(languageExtensions).map((lang) => (
+                <MenuItem key={lang} value={lang}>
+                  {lang}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+
+          {/* Show Code Editor Only If a Language Is Selected */}
+          {selectedLanguage && (
+            <CodeMirror
+              value={code}
+              onChange={(value) => setCode(value)}
+              extensions={[javascript()]}  // Extend this dynamically if needed
+              theme="dark"
+              height="180px"
+              style={styles.codeMirror}
+            />
+          )}
+        </Box>
       </form>
     </Box>
   );
 };
 
 const styles = {
-  container: { maxWidth: 600, margin: "auto", padding: 3 },
-  heading: { marginBottom: 2 },
-  input: { marginBottom: 2 },
-  inputSmall: { marginBottom: 2, width: '100%' },
-  label: { marginTop: 2, marginBottom: 1, fontWeight: 'bold' },
-  codeMirror: { borderRadius: '8px', border: '1px solid #ccc', fontSize: '14px' },
-  selectedTags: { marginTop: 2, display: 'flex', flexWrap: 'wrap', gap: 1 },
-  chip: { cursor: 'pointer', height: '30px' },
-  submitButton: { marginTop: 2, width: '100%', height: '40px' }
+  container: {
+    maxWidth: "900px",
+    margin: "auto",
+    padding: "20px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f4f4f4",
+    borderRadius: "12px",
+    boxShadow: "0px 6px 16px rgb(0, 0, 0)",
+  },
+  form: {
+    display: "flex",
+    width: "100%",
+    gap: "20px",
+  },
+  leftPanel: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+  },
+  rightPanel: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: "12px",
+    padding: "15px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+    boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
+  },
+  heading: {
+    fontWeight: 600,
+    color: "#333",
+  },
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: "6px",
+  },
+  selectedTags: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "10px",
+  },
+  chip: {
+    backgroundColor: "#6200ea",
+    color: "#fff",
+    fontWeight: "bold",
+    padding: "5px",
+    height: "30px",
+  },
+  submitButton: {
+    marginTop: "10px",
+    backgroundColor: "#6200ea",
+    color: "#fff",
+    padding: "10px",
+    borderRadius: "6px",
+    fontWeight: "bold",
+  },
+  languageSelect: {
+    minWidth: "120px",
+    marginBottom: "10px",
+  },
+  codeMirror: {
+    fontSize: "14px",
+    borderRadius: "6px",
+    border: "1px solid #ddd",
+  },
 };
 
 export default CreateDiscussion;
