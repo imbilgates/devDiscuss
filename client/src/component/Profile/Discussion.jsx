@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, CircularProgress } from '@mui/material';
 import { getDiscussionByUser, updateDiscussion, deleteDiscussion } from '../../service/Service';
 import DiscussionsTable from './DiscussionsTable';
 import VotersModal from './VotersModal';
@@ -81,7 +81,9 @@ const Discussion = () => {
       </Typography>
       {error && <Typography color="error">Error: {error}</Typography>}
       {discussions.length === 0 ? (
-       "Loading..."
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+          <CircularProgress />
+        </Box>
       ) : (
         <DiscussionsTable
           discussions={discussions}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider, IconButton, Select, MenuItem } from '@mui/material';
+import { Card, CardContent, CardActions, Button, Typography, Chip, Box, Avatar, Divider, IconButton, Stack } from '@mui/material';
 import CodeMirror from '@uiw/react-codemirror';
 import { PlayArrow, RestartAlt } from '@mui/icons-material';
 import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
@@ -17,13 +17,14 @@ import { languageExtensions } from '../../utils/Language'
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {
   const [output, setOutput] = useState([]);
   const [showPostButton, setShowPostButton] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
+  const [selectedLanguage, setSelectedLanguage] = useState();
 
   const { handleCommentSubmit, loading, setCommentText, commentText } = useAddComment();
 
   useEffect(() => {
     setShowPostButton(output.length > 0);
-  }, [discussion.code, output]);
+    setSelectedLanguage(discussion.language)
+  }, [discussion.code, output, discussion.language]);
 
   const runCode = async () => {
     const response = await apiRunCode(selectedLanguage, commentText || discussion.code);
@@ -105,22 +106,24 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
             <ThumbDownOffAltTwoToneIcon /> {discussion.votes.downvotes.length || 0}
           </Button>
 
-          
-        <Box sx={styles.dropdownContainer}>
-          <Select
-            value={selectedLanguage}
-            onChange={(e) => setSelectedLanguage(e.target.value)}
-            sx={styles.dropdown}
-            size="small"
-          >
+
+          <Stack direction="row" spacing={1}>
             {Object.keys(languageExtensions).map((lang) => (
-              <MenuItem key={lang} value={lang}>
-                {lang.toUpperCase()}
-              </MenuItem>
+              <Chip
+                key={lang}
+                label={lang.toUpperCase()}
+                onClick={() => setSelectedLanguage(lang)}
+                color={(discussion.language) === lang ? 'primary' : ''}
+                style={{
+                  backgroundColor: (selectedLanguage || discussion.language) === lang && (selectedLanguage === lang || !selectedLanguage) ? '#4caf50' : '', // Green color for discussion.language or selected language
+                  color: (selectedLanguage || discussion.language) === lang && (selectedLanguage === lang || !selectedLanguage) ? '#fff' : '', // White text color
+                }}
+                clickable
+              />
             ))}
-          </Select>
-        </Box>
-        
+          </Stack>
+
+
         </CardActions>
 
         <Box sx={styles.splitScreen}>
@@ -138,11 +141,12 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
             <CodeMirror
               value={commentText || discussion.code}
               onChange={(value) => setCommentText(value)}
-              extensions={[languageExtensions[selectedLanguage]]}
-              theme='dark'
+              extensions={[languageExtensions[selectedLanguage] || languageExtensions['javascript']]}  // Corrected code here
+              theme="dark"
               height="150px"
               style={{ borderRadius: '8px', border: '1px solid #ccc', fontSize: '14px' }}
             />
+
           </Box>
           <Box sx={styles.outputPanel}>
             <strong style={{ color: '#fff' }}>Output:</strong>

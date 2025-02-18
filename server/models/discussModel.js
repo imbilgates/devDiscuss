@@ -18,6 +18,10 @@ const discussModel = new mongoose.Schema({
         type: String,
         default: "", 
     },
+    language: {
+        type: String,
+        default: "", 
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

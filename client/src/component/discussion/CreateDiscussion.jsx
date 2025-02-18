@@ -5,7 +5,7 @@ import { predefinedTags } from '../../utils/PreTags';
 import { showToast } from "../../utils/toastUtils";
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
-import { TextField, Button, Chip, CircularProgress, Box, Typography, Autocomplete, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { TextField, Button, Chip, CircularProgress, Box, Typography, Autocomplete, FormControl, Select, MenuItem } from '@mui/material';
 import { languageExtensions } from '../../utils/Language'
 
 
@@ -17,7 +17,7 @@ const CreateDiscussion = () => {
 
   const navigate = useNavigate();
 
-  const handleTagAdd = (event, newValue) => {
+  const handleTagAdd = (_, newValue) => {
     if (!newValue || newValue === "") return;
 
     if (!predefinedTags.includes(newValue)) {
@@ -48,6 +48,7 @@ const CreateDiscussion = () => {
       description: e.target.description.value,
       code,
       tags,
+      language: selectedLanguage
     };
 
     try {
@@ -97,18 +98,20 @@ const CreateDiscussion = () => {
         {/* Right Side: Code Editor (Shown Only If Language Is Selected) */}
         <Box sx={styles.rightPanel}>
           <FormControl fullWidth sx={styles.languageSelect}>
-            <InputLabel>Language</InputLabel>
             <Select
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
+              displayEmpty
+              renderValue={(selected) => selected || "Select Language"}
             >
               {Object.keys(languageExtensions).map((lang) => (
                 <MenuItem key={lang} value={lang}>
-                  {lang}
+                  {lang?.toLocaleUpperCase()}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+
 
 
           {/* Show Code Editor Only If a Language Is Selected */}

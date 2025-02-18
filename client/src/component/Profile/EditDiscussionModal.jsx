@@ -10,12 +10,23 @@ import {
     Select,
     MenuItem,
     FormHelperText,
+    Chip,
+    Box,
 } from "@mui/material";
-import { javascript } from "@codemirror/lang-javascript";
+import { languageExtensions } from '../../utils/Language';
 import CodeMirror from "@uiw/react-codemirror";
 
 const EditDiscussionModal = ({ open, onClose, discussion, onSave, tags, setDiscussion }) => {
     if (!discussion) return null;
+
+    const handleLanguageChange = (event) => {
+        const selectedLanguage = event.target.value;
+        setDiscussion({
+            ...discussion,
+            language: selectedLanguage,
+            code: "", // Optionally reset the code when language changes
+        });
+    };
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -59,10 +70,36 @@ const EditDiscussionModal = ({ open, onClose, discussion, onSave, tags, setDiscu
                     multiline
                     rows={3}
                 />
+                
+                {/* Language Selection and Chip */}
+                <Box display="flex" alignItems="center" gap="8px" marginTop="16px">
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel>Language</InputLabel>
+                        <Select
+                            value={discussion.language || ''}
+                            onChange={handleLanguageChange}
+                            label="Language"
+                        >
+                            <MenuItem value="javascript">JavaScript</MenuItem>
+                            <MenuItem value="python">Python</MenuItem>
+                            <MenuItem value="java">Java</MenuItem>
+                            {/* Add more languages here */}
+                        </Select>
+                    </FormControl>
+
+                    {discussion.language && (
+                        <Chip
+                            label={discussion.language.charAt(0).toUpperCase() + discussion.language.slice(1)}
+                            color="primary"
+                        />
+                    )}
+                </Box>
+
+                {/* Code Editor */}
                 <CodeMirror
                     value={discussion.code}
                     onChange={(value) => setDiscussion({ ...discussion, code: value })}
-                    extensions={[javascript()]}
+                    extensions={[languageExtensions[discussion.language || 'javascript']]}
                     theme="dark"
                     height="150px"
                     style={styles.codeMirror}

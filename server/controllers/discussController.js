@@ -5,10 +5,8 @@ import { sendEmail } from '../utils/emailService.js';
 
 // DISCUSSION
 export const createDiscussion = async (req, res) => {
-
-    const { title, description, tags, code } = req.body;
+    const { title, description, tags, code, language } = req.body; 
     const userId = req.user.id;
-
 
     try {
         const discussion = new discussionModel({
@@ -16,34 +14,30 @@ export const createDiscussion = async (req, res) => {
             description,
             tags,
             code,
+            language, 
             user: userId
-        })
+        });
         await discussion.save();
         res.status(201).json(discussion);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-
-}
+};
 
 export const getDiscussion = async (req, res) => {
     const { tag } = req.query;
-
     try {
         const filter = tag ? { tags: tag } : {};
         const discussions = await discussionModel
             .find(filter)
             .populate("user", "name email image")
             .sort({ createdAt: -1 })
-            .lean(); // Fetch plain JavaScript objects for better performance
-
-        // Add commentsCount to each discussion
+            .lean();
         const discussionsWithCount = discussions.map(discussion => ({
             ...discussion,
             commentsCount: discussion.comments.length,
         }));
-
         res.json(discussionsWithCount);
     } catch (err) {
         console.error(err.message);
@@ -52,31 +46,25 @@ export const getDiscussion = async (req, res) => {
 };
 
 export const updateDiscussion = async (req, res) => {
-
-    const { title, description, tags, code } = req.body;
+    const { title, description, tags, code, language } = req.body;
     const discussionId = req.params.id;
-
     try {
         const discussion = await discussionModel.findById(discussionId);
-
         if (title) discussion.title = title;
         if (description) discussion.description = description;
         if (tags) discussion.tags = tags;
         if (code) discussion.code = code;
-
+        if (language) discussion.language = language;
         await discussion.save();
         res.json(discussion);
-
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-
-}
+};
 
 export const deleteDiscussion = async (req, res) => {
     const discussionId = req.params.id;
-
     if (!mongoose.Types.ObjectId.isValid(discussionId)) {
         return res.status(400).json({ msg: "Invalid discussion ID" });
     }
@@ -90,11 +78,10 @@ export const deleteDiscussion = async (req, res) => {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-}
+};
 
 export const getDiscussionById = async (req, res) => {
     const discussionId = req.params.id;
-
     if (!mongoose.Types.ObjectId.isValid(discussionId)) {
         return res.status(400).json({ msg: "Invalid discussion ID" });
     }
@@ -104,31 +91,29 @@ export const getDiscussionById = async (req, res) => {
             return res.status(404).json({ msg: "Discussion not found" });
         }
         res.json(discussion);
-
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-}
+};
 
 export const getDiscussionByUser = async (req, res) => {
     const userId = req.user.id;
     try {
         const discussions = await discussionModel.find({ user: mongoose.Types.ObjectId(userId) })
-            .populate("votes.upvotes", "name email image") // Populate name and email of upvoters
-            .populate("votes.downvotes", "name email image") // Populate name and email of downvoters
-            .populate("user", "name email image"); // Populate the owner of the discussion
-
+            .populate("votes.upvotes", "name email image")
+            .populate("votes.downvotes", "name email image")
+            .populate("user", "name email image");
         if (!discussions || discussions.length === 0) {
             return res.status(404).json({ msg: "No discussions found for this user" });
         }
-
         res.json(discussions);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
 };
+
 
 
 // VOTE FOR DISCUSSION

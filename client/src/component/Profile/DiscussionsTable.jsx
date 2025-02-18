@@ -25,7 +25,12 @@ const DiscussionsTable = ({ discussions, onEdit, onDelete, onOpenVotersModal }) 
       <TableBody>
         {discussions.map((discussion) => (
           <TableRow key={discussion._id} style={{ borderBottom: "1px solid #e0e0e0" }}>
-            <TableCell>{discussion.title}</TableCell>
+            <TableCell>
+              <Box display="flex" flexDirection="column">
+                <Typography variant="h6">{discussion.title}</Typography>
+                <Typography variant="body2" color="primary">{discussion.language}</Typography> {/* Language in blue */}
+              </Box>
+            </TableCell>
             <TableCell>{discussion.description}</TableCell>
             <TableCell>
               <Box display="flex" flexWrap="wrap" gap="8px">
