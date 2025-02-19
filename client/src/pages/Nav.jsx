@@ -2,6 +2,8 @@ import { useAuth } from '../contex/AuthContex';
 import DynamicAvatar from '../utils/DynamicAvatar';
 import { Avatar, CircularProgress } from '@mui/material';
 
+import icon from '../assets/navicon.png'
+
 const Nav = () => {
   const { user, setIsAuth, isLoading } = useAuth();
 
@@ -22,11 +24,13 @@ const Nav = () => {
     <>
       <nav className="navbar navbar-light bg-dark">
         <div className="container-fluid">
-          <a className="navbar-brand ms-3 fs-2 fw-bold text-info" href="/">devDiscuss</a>
+          <a className="navbar-brand ms-3 fs-2 fw-bold text-info" href="/">
+            <img src={icon} alt="icon" style={{ width: '50px', height: '50px', margin: '5px 4px 8px 4px',}}/>
+            devDiscuss</a>
 
           {/* Show input field and button only on large screens */}
           <div className="d-none d-sm-flex align-items-center">
-            {user?.image ? <Avatar src={user?.image} sx={{ marginRight: '10px' }}></Avatar> :
+            {user?.image ? <Avatar src={user?.image} sx={{ marginRight: '10px', borderRadius: '20%' }}></Avatar> :
               <DynamicAvatar DynamicAvatar={user} variant="rounded" />
             }
             <input
