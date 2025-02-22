@@ -135,7 +135,12 @@ const DiscussionList = () => {
 
       {loading
         ? Array(5).fill().map((_, index) => (
-          <Skeleton key={index} variant="rectangular" width="100%" height={200} />
+          <Box key={index} sx={{ marginBottom: '16px' }}>
+            <Skeleton variant="rectangular" width="100%" height={60} sx={{ marginBottom: '16px' }} />
+            <Skeleton variant="text" width="60%" sx={{ marginBottom: '8px' }} />
+            <Skeleton variant="text" width="80%" sx={{ marginBottom: '8px' }} />
+            <Skeleton variant="rectangular" width="100%" height={150} />
+          </Box>
         ))
         : sortedDiscussions().map((discussion) => (
           <DiscussionCard
