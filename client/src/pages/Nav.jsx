@@ -26,7 +26,7 @@ const Nav = () => {
 
           {/* Show input field and button only on large screens */}
           <div className="d-none d-sm-flex align-items-center">
-            {user?.image ? <Avatar src={user?.image} sx={{ marginRight: '10px' }}></Avatar> :
+            {user?.image ? <Avatar src={user?.image} sx={{ marginRight: '10px', borderRadius: '10px' }}></Avatar> :
               <DynamicAvatar DynamicAvatar={user} variant="rounded" />
             }
             <input

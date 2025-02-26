@@ -195,9 +195,9 @@ const styles = {
     alignItems: 'center',
   },
   avatar: {
-    marginRight: '12px',
-    width: 40,
-    height: 40,
+    marginRight: '1px',
+    width: 50,
+    height: 50,
   },
   tags: {
     margin: '2px',

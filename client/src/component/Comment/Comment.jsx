@@ -95,7 +95,7 @@ const Comment = ({ id, flag }) => {
             }
 
             <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
-                <Box sx={{ backgroundColor: 'tan' }}>
+                <Box sx={{ backgroundColor: 'rgb(180, 187, 187)' }}>
                     <DialogTitle>Answers</DialogTitle>
                     <DialogContent >
                         {loading && (
