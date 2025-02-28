@@ -63,15 +63,20 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
               </Typography>
             </Box>
           </Box>
-          <Box>
-            {discussion.tags.length === 0 ? (
-              <Typography variant="body2" color="textSecondary">Not Available</Typography>
-            ) : (
-              discussion.tags.map((tag, index) => (
-                <Chip key={index} label={`#${tag}`} color="primary" sx={styles.tags} />
-              ))
-            )}
-          </Box>
+
+          <div className="scroll-container">
+            <Stack direction="row" spacing={1}>
+              {discussion.tags.length === 0 ? (
+                <Typography variant="body2" color="textSecondary">No Tags</Typography>
+              ) : (
+                discussion.tags.map((tag, index) => (
+                  <Chip key={index} label={`#${tag}`} color="primary" />
+                ))
+              )}
+            </Stack>
+          </div>
+
+
         </Box>
 
         <Typography variant="h5" sx={styles.title}>{discussion.title}</Typography>
@@ -107,21 +112,23 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
           </Button>
 
 
-          <Stack direction="row" spacing={1}>
-            {Object.keys(languageExtensions).map((lang) => (
-              <Chip
-                key={lang}
-                label={lang.toUpperCase()}
-                onClick={() => setSelectedLanguage(lang)}
-                color={(discussion.language) === lang ? 'primary' : ''}
-                style={{
-                  backgroundColor: (selectedLanguage || discussion.language) === lang && (selectedLanguage === lang || !selectedLanguage) ? '#4caf50' : '', // Green color for discussion.language or selected language
-                  color: (selectedLanguage || discussion.language) === lang && (selectedLanguage === lang || !selectedLanguage) ? '#fff' : '', // White text color
-                }}
-                clickable
-              />
-            ))}
-          </Stack>
+          <div className="scroll-container">
+            <Stack direction="row" spacing={1}>
+              {Object.keys(languageExtensions).map((lang) => (
+                <Chip
+                  key={lang}
+                  label={lang.toUpperCase()}
+                  onClick={() => setSelectedLanguage(lang)}
+                  color={(discussion.language) === lang ? 'primary' : ''}
+                  style={{
+                    backgroundColor: (selectedLanguage || discussion.language) === lang && (selectedLanguage === lang || !selectedLanguage) ? '#4caf50' : '', // Green color for discussion.language or selected language
+                    color: (selectedLanguage || discussion.language) === lang && (selectedLanguage === lang || !selectedLanguage) ? '#fff' : '', // White text color
+                  }}
+                  clickable
+                />
+              ))}
+            </Stack>
+          </div>
 
 
         </CardActions>
@@ -198,10 +205,6 @@ const styles = {
     marginRight: '1px',
     width: 50,
     height: 50,
-  },
-  tags: {
-    margin: '2px',
-    fontSize: '0.85rem',
   },
   title: {
     marginBottom: '8px',

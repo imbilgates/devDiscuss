@@ -9,3 +9,10 @@ body {
     -ms-overflow-style: none; /* IE and Edge */
     background-color: rgb(180, 187, 187);
 }
+
+.scroll-container {
+    overflow-x: auto;  /* Enables horizontal scrolling */
+    white-space: nowrap;  /* Prevents content from wrapping */
+    border: none;
+}
+  
