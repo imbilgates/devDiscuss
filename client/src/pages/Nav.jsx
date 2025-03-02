@@ -2,6 +2,8 @@ import { useAuth } from '../contex/AuthContex';
 import DynamicAvatar from '../utils/DynamicAvatar';
 import { Avatar, CircularProgress } from '@mui/material';
 
+import { COLORS } from '../assets/colors/colors'
+
 const Nav = () => {
   const { user, setIsAuth, isLoading } = useAuth();
 
@@ -22,7 +24,7 @@ const Nav = () => {
     <>
       <nav className="navbar navbar-light bg-dark">
         <div className="container-fluid">
-          <a className="navbar-brand ms-3 fs-2 fw-bold text-info" href="/">devDiscuss</a>
+          <a className="navbar-brand ms-3 fs-2 fw-bold" style={{ color: COLORS.PRIMARY}} href="/">devDiscuss</a>
 
           {/* Show input field and button only on large screens */}
           <div className="d-none d-sm-flex align-items-center">
@@ -32,7 +34,8 @@ const Nav = () => {
             <input
               type="text"
               value={user?.email}
-              className="form-control disabled-input bg-primary text-white"
+              style={{ backgroundColor: COLORS.PRIMARY }}
+              className="form-control disabled-input text-white"
               placeholder="Username"
               aria-label="Username"
               aria-describedby="basic-addon1"

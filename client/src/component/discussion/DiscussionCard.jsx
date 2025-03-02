@@ -13,6 +13,9 @@ import { showToast } from '../../utils/toastUtils';
 import { runCode as apiRunCode } from '../../utils/Api';
 import { languageExtensions } from '../../utils/Language'
 
+import { COLORS } from '../../assets/colors/colors'
+
+
 
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {
   const [output, setOutput] = useState([]);
@@ -47,7 +50,10 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
   };
 
   return (
-    <Card key={discussion._id} sx={styles.card}>
+    <Card key={discussion._id} sx={styles.card} style={{
+      boxShadow: `${discussion.comments?.length !== 0 && "0 3px 8px #14ff08"}`,
+      color: `${discussion.comments?.length !== 0 && "#14ff08"}`
+    }}>
       <CardContent>
         <Box sx={styles.header}>
           <Box sx={styles.avatarSection}>
@@ -70,7 +76,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
                 <Typography variant="body2" color="textSecondary">No Tags</Typography>
               ) : (
                 discussion.tags.map((tag, index) => (
-                  <Chip key={index} label={`#${tag}`} color="primary" />
+                  <Chip key={index} label={`#${tag}`} style={{ color: COLORS.PRIMARY}} />
                 ))
               )}
             </Stack>
@@ -189,7 +195,8 @@ const styles = {
     margin: '16px 0',
     padding: '16px',
     borderRadius: 8,
-    boxShadow: '0 3px 8px rgba(0, 0, 0, 0.15)',
+    boxShadow: '0 3px 8px rgb(255, 8, 8)',
+    color: "red"
   },
   header: {
     display: 'flex',
@@ -264,7 +271,7 @@ const styles = {
     zIndex: 10,
   },
   runButton: {
-    backgroundColor: "#1976d2",
+    backgroundColor: COLORS.PRIMARY,
     color: "#fff",
     "&:hover": { backgroundColor: "#125ea3" },
   },
