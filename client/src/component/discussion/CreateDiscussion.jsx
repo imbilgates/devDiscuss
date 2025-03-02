@@ -8,7 +8,6 @@ import { javascript } from '@codemirror/lang-javascript';
 import { TextField, Button, Chip, CircularProgress, Box, Typography, Autocomplete, FormControl, Select, MenuItem } from '@mui/material';
 import { languageExtensions } from '../../utils/Language'
 
-
 const CreateDiscussion = () => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
@@ -17,26 +16,31 @@ const CreateDiscussion = () => {
 
   const navigate = useNavigate();
 
-  const handleTagAdd = (_, newValue) => {
-    if (!newValue || newValue === "") return;
+  const handleTagAdd = (event, newValue) => {
+    if (!newValue || newValue.trim() === "") return;
 
-    if (!predefinedTags.includes(newValue)) {
-      showToast("You can only add predefined tags.", "error");
-      return;
-    }
+    const formattedValue = newValue.trim().toLowerCase();
 
     if (tags.length >= 3) {
       showToast("You cannot add more than 3 tags.", "error");
       return;
     }
 
-    if (!tags.includes(newValue)) {
-      setTags([...tags, newValue]);
+    if (!tags.includes(formattedValue)) {
+      setTags([...tags, formattedValue]);
     }
   };
 
   const handleTagRemove = (tagToRemove) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleTagAdd(null, event.target.value);
+      event.target.value = "";
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -58,7 +62,7 @@ const CreateDiscussion = () => {
       e.target.description.value = "";
       setTags([]);
       setCode("");
-      setSelectedLanguage("");  // Reset language on submission
+      setSelectedLanguage("");
       navigate("/");
       showToast("Discussion Created Successfully!", "success");
     } catch (error) {
@@ -78,9 +82,17 @@ const CreateDiscussion = () => {
           <TextField label="Description" name="description" fullWidth required multiline rows={3} sx={styles.input} />
 
           <Autocomplete
+            freeSolo
             options={predefinedTags.filter(tag => !tags.includes(tag))}
             onChange={handleTagAdd}
-            renderInput={(params) => <TextField {...params} label="Tags" sx={styles.input} />}
+            renderInput={(params) => (
+              <TextField 
+                {...params} 
+                label="Tags (Press Enter to Add Custom Tag)" 
+                onKeyDown={handleKeyDown} 
+                sx={styles.input} 
+              />
+            )}
           />
 
           {/* Selected Tags */}
@@ -112,14 +124,12 @@ const CreateDiscussion = () => {
             </Select>
           </FormControl>
 
-
-
           {/* Show Code Editor Only If a Language Is Selected */}
           {selectedLanguage && (
             <CodeMirror
               value={code}
               onChange={(value) => setCode(value)}
-              extensions={[javascript()]}  // Extend this dynamically if needed
+              extensions={[javascript()]}  
               theme="dark"
               height="180px"
               style={styles.codeMirror}

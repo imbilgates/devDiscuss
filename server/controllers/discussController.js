@@ -24,21 +24,36 @@ export const createDiscussion = async (req, res) => {
         res.status(500).send("Server Error");
     }
 };
-
 export const getDiscussion = async (req, res) => {
-    const { tag } = req.query;
+    const { tag, page = 1, limit = 5 } = req.query; // Default page 1, limit 10
+    const skip = (page - 1) * limit; // Calculate offset
+
     try {
         const filter = tag ? { tags: tag } : {};
+        
+        // Fetch discussions with pagination
         const discussions = await discussionModel
             .find(filter)
             .populate("user", "name email image")
             .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(parseInt(limit))
             .lean();
+
+        // Get total discussion count
+        const totalDiscussions = await discussionModel.countDocuments(filter);
+
         const discussionsWithCount = discussions.map(discussion => ({
             ...discussion,
             commentsCount: discussion.comments.length,
         }));
-        res.json(discussionsWithCount);
+
+        res.json({
+            discussions: discussionsWithCount,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(totalDiscussions / limit),
+            hasMore: skip + parseInt(limit) < totalDiscussions, // Check if more data is available
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");

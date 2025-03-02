@@ -1,10 +1,14 @@
 import axios from "axios";
 
 // DISCUSSIONS
-export const listDiscussions = (tag) => {
-    const url = tag ? `api/discussion?tag=${encodeURIComponent(tag)}` : 'api/discussion';
+export const listDiscussions = (tag, page = 1, limit = 10) => {
+    let url = `api/discussion?page=${page}&limit=${limit}`;
+    if (tag) {
+        url += `&tag=${encodeURIComponent(tag)}`;
+    }
     return axios.get(url);
 };
+
 
 export const getDiscussionByUser = () => axios.get("api/discussion/user", { withCredentials: true });
 
