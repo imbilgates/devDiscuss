@@ -63,7 +63,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
               <DynamicAvatar firstLetter={discussion.user?.name?.charAt(0).toUpperCase() || 'U'} />
             )}
             <Box>
-              <Typography variant="h6">{discussion.user?.name.toUpperCase() || 'Anonymous User'}</Typography>
+              <Typography variant="h6" sx={{color: "black"}}>{discussion.user?.name.toUpperCase() || 'Anonymous User'}</Typography>
               <Typography variant="body2" color="textSecondary">
                 {timeAgo(discussion.createdAt)}
               </Typography>

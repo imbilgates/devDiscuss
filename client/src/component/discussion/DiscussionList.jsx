@@ -5,6 +5,7 @@ import { Select, MenuItem, Skeleton, FormControl, Box } from '@mui/material';
 import PaginationControls from '../common/PaginationControls';
 import DiscussionCard from './DiscussionCard';
 import { useAuth } from "../../contex/AuthContex";
+import StatusIndicator from "./StatusIndicator";
 
 const DiscussionList = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -101,6 +102,12 @@ const DiscussionList = () => {
 
   return (
     <div className="container mt-4">
+
+      <Box display="flex" justifyContent="flex-end" gap={2}>
+        <StatusIndicator status="answered" />
+        <StatusIndicator status="notAnswered" />
+      </Box>
+
       <Box display="flex" alignItems="center" sx={{ gap: "9px", mb: 2 }}>
         {/* Tag Filter Dropdown */}
         <FormControl size="small" sx={{ minWidth: 50 }}>
@@ -123,6 +130,7 @@ const DiscussionList = () => {
           </Select>
         </FormControl>
       </Box>
+
 
       {loading
         ? Array(5).fill().map((_, index) => (
