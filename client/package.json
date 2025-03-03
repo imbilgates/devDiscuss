@@ -13,6 +13,7 @@
     "@codemirror/lang-cpp": "github:codemirror/lang-cpp",
     "@codemirror/lang-java": "github:codemirror/lang-java",
     "@codemirror/lang-javascript": "github:codemirror/lang-javascript",
+    "@codemirror/lang-php": "^6.0.1",
     "@codemirror/lang-python": "github:codemirror/lang-python",
     "@codemirror/language": "^6.10.8",
     "@codemirror/state": "^6.5.1",

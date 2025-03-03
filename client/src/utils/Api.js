@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const runCode = async (language, code) => {
+export const runCode = async (language, code, stdin = "") => {
   try {
     const fileExtensions = {
       javascript: "js",
@@ -19,7 +19,7 @@ export const runCode = async (language, code) => {
       import.meta.env.VITE_API_URL,
       {
         language,
-        stdin: "",
+        stdin, // Pass user input dynamically
         files: [{ name: fileName, content: code }],
       },
       {

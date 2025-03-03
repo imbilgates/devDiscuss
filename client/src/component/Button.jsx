@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import add from '../assets/add.png';
 import explore from '../assets/explore.png';
 import profile from '../assets/profile.png';
+import compiler from '../assets/compiler.png';
 
 const Button = () => {
   const navigate = useNavigate();
@@ -18,6 +19,11 @@ const Button = () => {
     navigate('/profile');
   };
 
+  const handleCompilerClick = () => {
+    window.open('/compiler', '_blank');
+  };
+  
+
 
   return (
     <div className="d-flex justify-content-center align-items-center mt-4">
@@ -29,6 +35,9 @@ const Button = () => {
       </button>
       <button onClick={handleProfileClick} className="btn p-0 m-2">
         <img src={profile} alt="Add Discussion" className="rounded-circle" style={{ width: '40px', height: '40px' }} />
+      </button>
+      <button onClick={handleCompilerClick} className="btn p-0 m-2">
+        <img src={compiler} alt="Add Discussion" className="rounded-circle" style={{ width: '40px', height: '40px' }} />
       </button>
     </div>
   );
