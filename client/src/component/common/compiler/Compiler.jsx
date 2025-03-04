@@ -2,21 +2,25 @@ import { useState, useRef } from "react";
 import { Box, Select, MenuItem, IconButton, Typography } from "@mui/material";
 import CodeMirror from "@uiw/react-codemirror";
 import { PlayArrow, RestartAlt } from "@mui/icons-material";
-import { runCode as apiRunCode } from "../../utils/Api";
-import { languageExtensions } from "../../utils/Language";
+import { runCode as apiRunCode } from "../../../utils/Api";
+import { languageExtensions } from "../../../utils/Language";
+import CodeModal from "./CodeModal";
 
 const Compiler = () => {
+    const [open, setOpen] = useState(false);
     const [code, setCode] = useState(``);
     const [output, setOutput] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState("python");
     const [waitingForInput, setWaitingForInput] = useState(false);
     const [userInput, setUserInput] = useState("");
+    const [error, setError] = useState(""); // Store error message
     const inputRef = useRef(null);
 
     const runCode = async (stdinValue = "") => {
         setOutput([]);
         setWaitingForInput(false);
         setUserInput("");
+        setError(""); // Reset error before execution
 
         try {
             const response = await apiRunCode(selectedLanguage, code, stdinValue);
@@ -24,11 +28,12 @@ const Compiler = () => {
 
             if (response.stderr) {
                 setOutput([response.stderr]);
+                setError(response.stderr); // Set error message
+                setOpen(true); // Open modal on error
             } else {
-                // Check if input is required by detecting "Enter your name:"
                 const outputLines = response.stdout.split("\n");
                 if (outputLines.some(line => line.includes("Enter your name:"))) {
-                    setOutput(outputLines.slice(0, -1)); // Show output before input
+                    setOutput(outputLines.slice(0, -1));
                     setWaitingForInput(true);
                     setTimeout(() => inputRef.current?.focus(), 100);
                 } else {
@@ -37,14 +42,15 @@ const Compiler = () => {
             }
         } catch (error) {
             console.error("Execution error:", error);
-            setOutput(["Error executing code"]);
+            setError("Error executing code"); // Fallback error message
+            setOpen(true); // Open modal on error
         }
     };
 
     const handleUserInput = async (e) => {
         if (e.key === "Enter" && userInput.trim() !== "") {
             setWaitingForInput(false);
-            await runCode(userInput); // Send user input as stdin
+            await runCode(userInput);
         }
     };
 
@@ -102,11 +108,21 @@ const Compiler = () => {
                     </Box>
                 )}
             </Box>
+
+            {/* Show modal only when there is an error */}
+            <CodeModal
+                language={selectedLanguage}
+                code={code}
+                open={open}
+                onClose={() => setOpen(false)}
+                error={error} // Pass error message
+            />
         </Box>
     );
 };
 
 export default Compiler;
+
 
 const styles = {
     container: {

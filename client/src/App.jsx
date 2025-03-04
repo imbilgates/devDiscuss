@@ -6,7 +6,7 @@ import CreateDiscussion from './component/discussion/CreateDiscussion';
 import Profile from './component/Profile/Profile';
 import Loading from './utils/Loading';
 import DiscussionList from './component/discussion/DiscussionList';
-import Compiler from './component/common/Compiler';
+import Compiler from './component/common/compiler/Compiler';
 import MainLayout from './layouts/MainLayout';
 import ProtectedRoute from './layouts/ProtectedRoute';
 
@@ -23,6 +23,7 @@ function App() {
       <Routes>
         {/* Public Route */}
         <Route path='/auth' element={<Auth />} />
+        <Route path='/compiler' element={<Compiler />} />
 
         {/* Protected Routes for MainLayout */}
         <Route element={<ProtectedRoute />}>
@@ -31,9 +32,6 @@ function App() {
             <Route path='/create' element={<CreateDiscussion />} />
             <Route path='/profile' element={<Profile />} />
           </Route>
-
-          {/* Protected Compiler Route */}
-          <Route path='/compiler' element={<Compiler />} />
         </Route>
       </Routes>
     </>

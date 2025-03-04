@@ -1,113 +1,55 @@
-import { useState } from "react";
-import { createDiscussion } from '../../service/Service';
-import { useNavigate } from 'react-router-dom';
-import { predefinedTags } from '../../utils/PreTags';
-import { showToast } from "../../utils/toastUtils";
-import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
-import { TextField, Button, Chip, CircularProgress, Box, Typography, Autocomplete, FormControl, Select, MenuItem } from '@mui/material';
-import { languageExtensions } from '../../utils/Language'
+import { TextField, Button, CircularProgress, Box, Typography, FormControl, Select, MenuItem } from "@mui/material";
+import { languageExtensions } from "../../utils/Language";
+import CodeMirror from "@uiw/react-codemirror";
+import TagSelector from "../common/TagSelector";
+import useCreateDiscussion from "../../hooks/useCreateDiscussion"; // Import the hook
 
 const CreateDiscussion = () => {
-  const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState([]);
-  const [code, setCode] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const { 
+    loading, 
+    tags, setTags, 
+    code, setCode, 
+    selectedLanguage, setSelectedLanguage, 
+    handleSubmit 
+  } = useCreateDiscussion();
 
-  const navigate = useNavigate();
-
-  const handleTagAdd = (event, newValue) => {
-    if (!newValue || newValue.trim() === "") return;
-
-    const formattedValue = newValue.trim().toLowerCase();
-
-    if (tags.length >= 3) {
-      showToast("You cannot add more than 3 tags.", "error");
-      return;
-    }
-
-    if (!tags.includes(formattedValue)) {
-      setTags([...tags, formattedValue]);
-    }
-  };
-
-  const handleTagRemove = (tagToRemove) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleTagAdd(null, event.target.value);
-      event.target.value = "";
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-
     const formData = {
       title: e.target.title.value,
       description: e.target.description.value,
       code,
       tags,
-      language: selectedLanguage
+      language: selectedLanguage,
     };
 
-    try {
-      await createDiscussion(formData);
-      setLoading(false);
+    handleSubmit(formData, () => {
       e.target.title.value = "";
       e.target.description.value = "";
       setTags([]);
       setCode("");
       setSelectedLanguage("");
-      navigate("/");
-      showToast("Discussion Created Successfully!", "success");
-    } catch (error) {
-      setLoading(false);
-      console.error("Error creating discussion:", error);
-      showToast("Error creating discussion. Please try again.", "error");
-    }
+    });
   };
 
   return (
     <Box sx={styles.container}>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        {/* Left Side: Input Fields */}
+      <form onSubmit={handleFormSubmit} style={styles.form}>
+        {/* Left Panel */}
         <Box sx={styles.leftPanel}>
           <Typography variant="h5" sx={styles.heading}>Create Discussion</Typography>
           <TextField label="Title" name="title" fullWidth required sx={styles.input} />
           <TextField label="Description" name="description" fullWidth required multiline rows={3} sx={styles.input} />
-
-          <Autocomplete
-            freeSolo
-            options={predefinedTags.filter(tag => !tags.includes(tag))}
-            onChange={handleTagAdd}
-            renderInput={(params) => (
-              <TextField 
-                {...params} 
-                label="Tags (Press Enter to Add Custom Tag)" 
-                onKeyDown={handleKeyDown} 
-                sx={styles.input} 
-              />
-            )}
-          />
-
-          {/* Selected Tags */}
-          <Box sx={styles.selectedTags}>
-            {tags.map((tag, index) => (
-              <Chip key={index} label={tag} onDelete={() => handleTagRemove(tag)} sx={styles.chip} />
-            ))}
-          </Box>
+          
+          {/* Tag Selector Component */}
+          <TagSelector tags={tags} setTags={setTags} />
 
           <Button type="submit" variant="contained" color="primary" disabled={loading} sx={styles.submitButton}>
             {loading ? <CircularProgress size={20} /> : "Submit"}
           </Button>
         </Box>
 
-        {/* Right Side: Code Editor (Shown Only If Language Is Selected) */}
+        {/* Right Panel */}
         <Box sx={styles.rightPanel}>
           <FormControl fullWidth sx={styles.languageSelect}>
             <Select
@@ -118,7 +60,7 @@ const CreateDiscussion = () => {
             >
               {Object.keys(languageExtensions).map((lang) => (
                 <MenuItem key={lang} value={lang}>
-                  {lang?.toLocaleUpperCase()}
+                  {lang?.toUpperCase()}
                 </MenuItem>
               ))}
             </Select>
@@ -129,7 +71,7 @@ const CreateDiscussion = () => {
             <CodeMirror
               value={code}
               onChange={(value) => setCode(value)}
-              extensions={[javascript()]}  
+              extensions={[languageExtensions[selectedLanguage]]}
               theme="dark"
               height="180px"
               style={styles.codeMirror}
@@ -140,6 +82,8 @@ const CreateDiscussion = () => {
     </Box>
   );
 };
+
+export default CreateDiscussion;
 
 const styles = {
   container: {
@@ -182,18 +126,6 @@ const styles = {
     backgroundColor: "#fff",
     borderRadius: "6px",
   },
-  selectedTags: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
-  },
-  chip: {
-    backgroundColor: "#6200ea",
-    color: "#fff",
-    fontWeight: "bold",
-    padding: "5px",
-    height: "30px",
-  },
   submitButton: {
     marginTop: "10px",
     backgroundColor: "#6200ea",
@@ -212,5 +144,3 @@ const styles = {
     border: "1px solid #ddd",
   },
 };
-
-export default CreateDiscussion;
