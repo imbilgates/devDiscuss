@@ -1,3 +1,4 @@
+**Contributions are welcome for this project.**
 ### Title
 DevDiscuss: A Collaborative Problem-Solving Platform
 
