@@ -12,9 +12,7 @@ import Comment from '../Comment/Comment';
 import { showToast } from '../../utils/toastUtils';
 import { runCode as apiRunCode } from '../../utils/Api';
 import { languageExtensions } from '../../utils/Language'
-
 import { COLORS } from '../../assets/colors/colors'
-
 
 
 const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }) => {

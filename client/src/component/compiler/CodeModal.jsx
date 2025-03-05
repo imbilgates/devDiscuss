@@ -1,10 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal, Box, Button, TextField, Typography, CircularProgress } from "@mui/material";
-import TagSelector from "../TagSelector";
-import useCreateDiscussion from "../../../hooks/useCreateDiscussion"; // Import the hook
+import { toast } from "react-toastify";
+import TagSelector from "../common/TagSelector";
+import useCreateDiscussion from "../../hooks/useCreateDiscussion"; // Import the hook
+import { useAuth } from "../../contex/AuthContex"; // Import Auth Context
 
 const CodeModal = ({ language, error, open, onClose, code }) => {
-  const { handleSubmit, loading } = useCreateDiscussion(); // Use custom hook
+  const { handleSubmit, loading } = useCreateDiscussion();
+  const { isAuth } = useAuth(); // Get auth state
+  const navigate = useNavigate(); // For redirection
 
   const getDefaultTitle = (error) => {
     if (error.toLowerCase().includes("syntax")) return "Syntax Error in Code";
@@ -23,7 +28,14 @@ const CodeModal = ({ language, error, open, onClose, code }) => {
   const [tags, setTags] = useState([]);
   const [uploading, setUploading] = useState(false);
 
-  const handleConfirm = () => setShowInputs(true);
+  const handleConfirm = () => {
+    if (!isAuth) {
+      toast.warning("You must be logged in to raise an issue!");
+      navigate("/auth"); // Redirect to auth page
+      return;
+    }
+    setShowInputs(true);
+  };
 
   const handleUpload = async () => {
     setUploading(true);
@@ -32,7 +44,7 @@ const CodeModal = ({ language, error, open, onClose, code }) => {
       title,
       description,
       tags,
-      code: code, // No code snippet here
+      code,
       language,
     };
 
@@ -40,6 +52,7 @@ const CodeModal = ({ language, error, open, onClose, code }) => {
       setUploading(false);
       setShowInputs(false); // Reset UI
       onClose(); // Close Modal
+      toast.success("Issue raised successfully!");
     });
   };
 
@@ -101,7 +114,7 @@ const CodeModal = ({ language, error, open, onClose, code }) => {
                 variant="contained"
                 color="primary"
                 onClick={handleUpload}
-                disabled={loading} // Use loading state
+                disabled={loading}
               >
                 {loading ? <CircularProgress size={20} sx={{ color: "white" }} /> : "Upload"}
               </Button>

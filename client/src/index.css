@@ -1,3 +1,6 @@
+@import "tailwindcss";
+
+
 /* Hide scrollbar but allow scrolling */
 ::-webkit-scrollbar {
     display: none;
@@ -7,7 +10,6 @@
 body {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
-    background-color: rgb(180, 187, 187);
 }
 
 .scroll-container {
@@ -15,4 +17,10 @@ body {
     white-space: nowrap;  /* Prevents content from wrapping */
     border: none;
 }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
   

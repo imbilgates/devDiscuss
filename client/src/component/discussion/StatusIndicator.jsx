@@ -17,7 +17,7 @@ const StatusIndicator = ({ status }) => {
         }}
       />
       <Typography variant="body2" sx={{ fontWeight: "bold", color: "text.primary" }}>
-        {status === "answered" ? "Answered" : "Not Answered"}
+        {status === "answered" ? "Answered" : "Not Yet"}
       </Typography>
     </Box>
   );

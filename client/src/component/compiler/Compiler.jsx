@@ -2,8 +2,8 @@ import { useState, useRef } from "react";
 import { Box, Select, MenuItem, IconButton, Typography } from "@mui/material";
 import CodeMirror from "@uiw/react-codemirror";
 import { PlayArrow, RestartAlt } from "@mui/icons-material";
-import { runCode as apiRunCode } from "../../../utils/Api";
-import { languageExtensions } from "../../../utils/Language";
+import { runCode as apiRunCode } from "../../utils/Api";
+import { languageExtensions } from "../../utils/Language";
 import CodeModal from "./CodeModal";
 
 const Compiler = () => {

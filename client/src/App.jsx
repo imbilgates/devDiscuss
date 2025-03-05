@@ -1,12 +1,12 @@
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useAuth } from './contex/AuthContex';
-import Auth from './component/auth/Auth';
+import AuthPage from './component/auth/AuthPage';
 import CreateDiscussion from './component/discussion/CreateDiscussion';
 import Profile from './component/Profile/Profile';
 import Loading from './utils/Loading';
 import DiscussionList from './component/discussion/DiscussionList';
-import Compiler from './component/common/compiler/Compiler';
+import Compiler from './component/compiler/Compiler';
 import MainLayout from './layouts/MainLayout';
 import ProtectedRoute from './layouts/ProtectedRoute';
 
@@ -22,7 +22,7 @@ function App() {
       <ToastContainer />
       <Routes>
         {/* Public Route */}
-        <Route path='/auth' element={<Auth />} />
+        <Route path='/auth' element={<AuthPage />} />
         <Route path='/compiler' element={<Compiler />} />
 
         {/* Protected Routes for MainLayout */}

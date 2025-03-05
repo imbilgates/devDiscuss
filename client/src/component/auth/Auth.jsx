@@ -7,8 +7,6 @@ import AuthToggle from './AuthToggle';
 import ErrorMessage from './ErrorMessage';
 import Message from './Message';
 import GoogleLoginAuth from './GoogleLoginAuth';
-
-import bgauth from '../../assets/bg-auth.png';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../utils/Loading';
 
@@ -18,8 +16,7 @@ const Auth = () => {
     const [message, setMessage] = useState('');
 
     const navigate = useNavigate();
-
-    const { isAuth, setIsAuth, isLoading } = useAuth()
+    const { isAuth, setIsAuth, isLoading } = useAuth();
 
     const handleToggle = () => {
         setIsLogin((prev) => !prev);
@@ -36,7 +33,7 @@ const Auth = () => {
     }, [isAuth, navigate]);
 
     if (isLoading) {
-        return <Loading />
+        return <Loading />;
     }
 
     return (
@@ -69,18 +66,12 @@ const styles = {
         alignItems: 'center',
         minHeight: '100vh',
         padding: 2,
-        backgroundImage: `url(${bgauth})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backdropFilter: 'blur(8px)',
     },
     paper: {
         width: 350,
         padding: 3,
         borderRadius: 2,
         textAlign: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(10px)',
         boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
     },
 };
