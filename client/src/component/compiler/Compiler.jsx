@@ -5,6 +5,7 @@ import { PlayArrow, RestartAlt } from "@mui/icons-material";
 import { runCode as apiRunCode } from "../../utils/Api";
 import { languageExtensions } from "../../utils/Language";
 import CodeModal from "./CodeModal";
+import { languageIcons } from "../../utils/json/icons";
 
 const Compiler = () => {
     const [open, setOpen] = useState(false);
@@ -71,9 +72,16 @@ const Compiler = () => {
                         size="small"
                         sx={styles.select}
                     >
-                        {Object.keys(languageExtensions).map((lang) => (
-                            <MenuItem key={lang} value={lang}>{lang.toUpperCase()}</MenuItem>
-                        ))}
+
+                        {Object.keys(languageExtensions).map((lang) => {
+                            const Icon = languageIcons[lang]; // Get the corresponding icon component
+                            return (
+                                <MenuItem key={lang} value={lang}>
+                                    {Icon && <Icon />} {lang.toUpperCase()}
+                                </MenuItem>
+                            );
+                        })}
+
                     </Select>
                     <Box sx={styles.buttonContainer}>
                         <IconButton onClick={() => runCode()} color="primary"><PlayArrow /></IconButton>
