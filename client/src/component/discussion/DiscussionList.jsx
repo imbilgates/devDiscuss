@@ -151,11 +151,17 @@ const DiscussionList = () => {
           />
         ))}
 
+      <div style={{ height: '30px' }}>
+      </div>
+
       <PaginationControls
         page={page}
         totalPages={totalPages}
         onPageChange={setPage}
       />
+
+      <div style={{ height: '70px' }}>
+      </div>
 
     </div>
   );
