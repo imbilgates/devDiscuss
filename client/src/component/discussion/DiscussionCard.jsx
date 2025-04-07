@@ -42,6 +42,7 @@ const DiscussionCard = ({ discussion, handleVote, errorMessages, currentUserId }
       await handleCommentSubmit(discussion._id, discussion.code);
       setShowPostButton(false);
       showToast("Answer Posted Successfully!", "success");
+      window.location.reload(); // Reload the page to see the new comment
     } else {
       showToast("You Must Change Something!", "error");
     }
