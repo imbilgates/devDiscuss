@@ -9,13 +9,12 @@ dotenv.config();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
+    user: process.env.EMAIL ?? 'devdiscuss.notifications@gmail.com',
+    pass: process.env.EMAIL_PASSWORD ?? 'gcxuvozxltaijtms',
   },
 });
 
 export const sendEmail = async (to, subject, commenterName, commentImage, commentText) => {
-
   // RESOLVING Dirname for ES module
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
